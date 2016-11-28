@@ -27,39 +27,46 @@ goldenrod = (218, 165, 32)
 #--------------------------------------------------------------------------------------------
 #Images:
 # Right
-walk1 = pygame.image.load("F:/Comp_proj/Images/AIP/walk1.png")
-walk2 = pygame.image.load("F:/Comp_proj/Images/AIP/walk2.png")
-walk3 = pygame.image.load("F:/Comp_proj/Images/AIP/walk3.png")
-jumpright = pygame.image.load("F:/Comp_proj/Images/AIP/jump.png")
-standright = pygame.image.load("F:/Comp_proj/Images/AIP/stand.png")
-duck = pygame.image.load("F:/Comp_proj/Images/AIP/marioduck.png")
+walk1 = pygame.image.load("walk1.png")
+walk2 = pygame.image.load("walk2.png")
+walk3 = pygame.image.load("walk3.png")
+jumpright = pygame.image.load("jump.png")
+standright = pygame.image.load("stand.png")
+duck = pygame.image.load("marioduck.png")
 
 
-vorteximage = pygame.image.load("F:/Comp_proj/Images/AIP/vortex.png")
+vorteximage = pygame.image.load("vortex.png")
+
+sea = pygame.image.load("sea.png")
+battleship = pygame.image.load("battleship.png")
+boat = pygame.image.load("boat.png")
 
 
-opennote1 = pygame.image.load("F:/Comp_proj/Images/AIP/opennote.png")
-opennote2 = pygame.image.load("F:/Comp_proj/Images/AIP/opennote2.png")
-opennote3 = pygame.image.load("F:/Comp_proj/Images/AIP/opennote3.png")
-opennote4 = pygame.image.load("F:/Comp_proj/Images/AIP/opennote4.png")
-opennote5 = pygame.image.load("F:/Comp_proj/Images/AIP/opennote5.png")
-hitlerstomp = pygame.image.load("F:/Comp_proj/Images/AIP/hitlerstomp.png")
-fridgeclosedimage = pygame.image.load("F:/Comp_proj/Images/AIP/fridgeclosed.png")
-fridgeopenimage = pygame.image.load("F:/Comp_proj/Images/AIP/fridgeopen.png")
-largedialogue = pygame.image.load("F:/Comp_proj/Images/AIP/largedialogue.png")
-mediumdialogue = pygame.image.load("F:/Comp_proj/Images/AIP/mediumdialogue.png")
-smalldialogue = pygame.image.load("F:/Comp_proj/Images/AIP/smalldialogue.png")
-pipesimage = pygame.image.load("F:/Comp_proj/Images/AIP/pipes.png")
-hitler1 = pygame.image.load("F:/Comp_proj/Images/AIP/hitler1.png")
-destroyer = pygame.image.load("F:/Comp_proj/Images/AIP/destroyer.png")
-cave = pygame.image.load("F:/Comp_proj/Images/AIP/cave.png")
+
+
+
+opennote1 = pygame.image.load("opennote.png")
+opennote2 = pygame.image.load("opennote2.png")
+opennote3 = pygame.image.load("opennote3.png")
+opennote4 = pygame.image.load("opennote4.png")
+opennote5 = pygame.image.load("opennote5.png")
+hitlerstomp = pygame.image.load("hitlerstomp.png")
+fridgeclosedimage = pygame.image.load("fridgeclosed.png")
+fridgeopenimage = pygame.image.load("fridgeopen.png")
+largedialogue = pygame.image.load("largedialogue.png")
+mediumdialogue = pygame.image.load("mediumdialogue.png")
+smalldialogue = pygame.image.load("smalldialogue.png")
+pipesimage = pygame.image.load("pipes.png")
+hitler1 = pygame.image.load("hitler1.png")
+destroyer = pygame.image.load("destroyer.png")
+cave = pygame.image.load("cave.png")
 
 
 
 # Background images:
-hitlerbackgroundimage = pygame.image.load("F:/Comp_proj/Images/AIP/hitlerbackground.png")
-genericbackground = pygame.image.load("F:/Comp_proj/Images/AIP/genericbackground.png")
-notebackground = pygame.image.load("F:/Comp_proj/Images/AIP/note.png")
+hitlerbackgroundimage = pygame.image.load("hitlerbackground.png")
+genericbackground = pygame.image.load("genericbackground.png")
+notebackground = pygame.image.load("note.png")
 
 
 # Left
@@ -262,6 +269,19 @@ def pause_screen():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_p:
                     return
+
+        
+def vortex(xwidth = 1500, yheight = 1500):
+    
+    
+    for i in range(360):
+        clock.tick(90)
+        
+        theimage = pygame.transform.rotate(vorteximage, i)
+##        theimage.center = display_width/2, display_height/2
+        secondimage = pygame.transform.rotate(walklistright[0], 2 * i)
+        background([theimage, secondimage], [display_width/2 - 1500/2, display_width/2], [display_height/2 - 1500/2, display_height/2])
+        pygame.display.update() 
                 
 #------------------------------------------------------------------------------------------
 # INTRO ANIMATIONS:
@@ -476,20 +496,10 @@ def firstintro(stage = 1):
     
         
         
+     
         
-def vortex(xwidth = 1500, yheight = 1500):
-    
-    
-    for i in range(360):
-        clock.tick(90)
-        
-        theimage = pygame.transform.rotate(vorteximage, i)
-##        theimage.center = display_width/2, display_height/2
-        secondimage = pygame.transform.rotate(walklistright[0], 2 * i)
-        background([theimage, secondimage], [display_width/2 - 1500/2, display_width/2], [display_height/2 - 1500/2, display_height/2])
-        pygame.display.update()      
-        
-        
+
+      
         
         
 
@@ -655,6 +665,36 @@ def hitlerrun():
     gameDisplay.fill(white)
     hitlerrun()
 
+def launchgame():
+    # Changeables:
+    seayposition = display_height - 50
+    seaxposition = 0
+    boatx = 100
+    battleshipx = display_width - 300
+    print boatx, battleshipx
+    boaty = seayposition
+    battleshipy = seayposition - 70
+
+
+    # --------------------------------
+    background([sea, boat], [seaxposition, boatx], [seayposition, boaty])
+    pygame.display.update()
+    time.sleep(0.5)
+    walk(display_width + 30, battleshipx, battleshipy, [None, battleship, None, None], direction = "Left", changewidth = 5, backgroundimagelist = [sea, boat], backgroundx = [seaxposition, boatx], backgroundy = [seayposition, boaty]) 
+    pygame.display.update()
+    background([sea, boat, battleship], [seaxposition, boatx, battleshipx], [seayposition, boaty, battleshipy])
+    pygame.display.update()
+    time.sleep(0.5)
+    
+    dialoguebox("You are entering British waters... Turn back or we will open Fire!", "Large", [battleshipx - 100, battleshipy])
+    
+    pygame.display.update()
+    time.sleep(5)
+    pygame.quit()
+    quit()
+    
+    
+
 
                 
 # CHARACTER FUNCTIONS:
@@ -741,13 +781,6 @@ def gameintro():
 
         if intro:
             firstgameloop()           
-
-            
-            
-
-            
-            
-            
             intro = False
 
 def firstgameloop():
@@ -980,7 +1013,7 @@ def firstgameloop():
 
 
 
-gameintro()
+launchgame()
 
 
 
