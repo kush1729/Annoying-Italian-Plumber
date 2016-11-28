@@ -21,11 +21,11 @@ grey = (178, 178, 178)
 
 
 #Images:
-walk1 = pygame.image.load("C:/PythonX/Images/AIP/walk1.png")
-walk2 = pygame.image.load("C:/PythonX/Images/AIP/walk2.png")
-walk3 = pygame.image.load("C:/PythonX/Images/AIP/walk3.png")
-jumpright = pygame.image.load("C:/PythonX/Images/AIP/jump.png")
-standright = pygame.image.load("C:/PythonX/Images/AIP/stand.png")
+walk1 = pygame.image.load("walk1.png")
+walk2 = pygame.image.load("walk2.png")
+walk3 = pygame.image.load("walk3.png")
+jumpright = pygame.image.load("jump.png")
+standright = pygame.image.load("stand.png")
 
 
 walk1left = pygame.transform.flip(walk1, True, False)

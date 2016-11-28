@@ -45,10 +45,13 @@ smallstandright = pygame.image.load("smallmario.png")
 smallduck = pygame.image.load("smallmarioduck.png")
 smallstandleft = pygame.transform.flip(smallstandright, True, False)
 
+<<<<<<< HEAD
+=======
 
 
 
 
+>>>>>>> d41eb8ff1e7878594a0c7f8263bb95027b4bcfa2
 opennote1 = pygame.image.load("opennote.png")
 opennote2 = pygame.image.load("opennote2.png")
 opennote3 = pygame.image.load("opennote3.png")
@@ -92,7 +95,7 @@ dialoguedict = {"Large" : largedialogue, "Medium":mediumdialogue, "Small":smalld
 
 
 #IMPORTANT CONSTANTS FOR AND DESIGN OF GAME DISPLAY------------------------------------------
-display_width, display_height = 1000, 750
+display_width, display_height = 1366, 768
 gameDisplay = pygame.display.set_mode((display_width, display_height), pygame.FULLSCREEN)
 gameDisplay.fill(white)
 clock = pygame.time.Clock()
