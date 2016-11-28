@@ -27,39 +27,39 @@ goldenrod = (218, 165, 32)
 #--------------------------------------------------------------------------------------------
 #Images:
 # Right
-walk1 = pygame.image.load("F:/Comp_proj/Images/AIP/walk1.png")
-walk2 = pygame.image.load("F:/Comp_proj/Images/AIP/walk2.png")
-walk3 = pygame.image.load("F:/Comp_proj/Images/AIP/walk3.png")
-jumpright = pygame.image.load("F:/Comp_proj/Images/AIP/jump.png")
-standright = pygame.image.load("F:/Comp_proj/Images/AIP/stand.png")
-duck = pygame.image.load("F:/Comp_proj/Images/AIP/marioduck.png")
+walk1 = pygame.image.load("walk1.png")
+walk2 = pygame.image.load("walk2.png")
+walk3 = pygame.image.load("walk3.png")
+jumpright = pygame.image.load("jump.png")
+standright = pygame.image.load("stand.png")
+duck = pygame.image.load("marioduck.png")
 
 
-vorteximage = pygame.image.load("F:/Comp_proj/Images/AIP/vortex.png")
+vorteximage = pygame.image.load("vortex.png")
 
 
-opennote1 = pygame.image.load("F:/Comp_proj/Images/AIP/opennote.png")
-opennote2 = pygame.image.load("F:/Comp_proj/Images/AIP/opennote2.png")
-opennote3 = pygame.image.load("F:/Comp_proj/Images/AIP/opennote3.png")
-opennote4 = pygame.image.load("F:/Comp_proj/Images/AIP/opennote4.png")
-opennote5 = pygame.image.load("F:/Comp_proj/Images/AIP/opennote5.png")
-hitlerstomp = pygame.image.load("F:/Comp_proj/Images/AIP/hitlerstomp.png")
-fridgeclosedimage = pygame.image.load("F:/Comp_proj/Images/AIP/fridgeclosed.png")
-fridgeopenimage = pygame.image.load("F:/Comp_proj/Images/AIP/fridgeopen.png")
-largedialogue = pygame.image.load("F:/Comp_proj/Images/AIP/largedialogue.png")
-mediumdialogue = pygame.image.load("F:/Comp_proj/Images/AIP/mediumdialogue.png")
-smalldialogue = pygame.image.load("F:/Comp_proj/Images/AIP/smalldialogue.png")
-pipesimage = pygame.image.load("F:/Comp_proj/Images/AIP/pipes.png")
-hitler1 = pygame.image.load("F:/Comp_proj/Images/AIP/hitler1.png")
-destroyer = pygame.image.load("F:/Comp_proj/Images/AIP/destroyer.png")
-cave = pygame.image.load("F:/Comp_proj/Images/AIP/cave.png")
+opennote1 = pygame.image.load("opennote.png")
+opennote2 = pygame.image.load("opennote2.png")
+opennote3 = pygame.image.load("opennote3.png")
+opennote4 = pygame.image.load("opennote4.png")
+opennote5 = pygame.image.load("opennote5.png")
+hitlerstomp = pygame.image.load("hitlerstomp.png")
+fridgeclosedimage = pygame.image.load("fridgeclosed.png")
+fridgeopenimage = pygame.image.load("fridgeopen.png")
+largedialogue = pygame.image.load("largedialogue.png")
+mediumdialogue = pygame.image.load("mediumdialogue.png")
+smalldialogue = pygame.image.load("smalldialogue.png")
+pipesimage = pygame.image.load("pipes.png")
+hitler1 = pygame.image.load("hitler1.png")
+destroyer = pygame.image.load("destroyer.png")
+cave = pygame.image.load("cave.png")
 
 
 
 # Background images:
-hitlerbackgroundimage = pygame.image.load("F:/Comp_proj/Images/AIP/hitlerbackground.png")
-genericbackground = pygame.image.load("F:/Comp_proj/Images/AIP/genericbackground.png")
-notebackground = pygame.image.load("F:/Comp_proj/Images/AIP/note.png")
+hitlerbackgroundimage = pygame.image.load("hitlerbackground.png")
+genericbackground = pygame.image.load("genericbackground.png")
+notebackground = pygame.image.load("note.png")
 
 
 # Left
@@ -81,7 +81,7 @@ dialoguedict = {"Large" : largedialogue, "Medium":mediumdialogue, "Small":smalld
 
 
 #IMPORTANT CONSTANTS FOR AND DESIGN OF GAME DISPLAY------------------------------------------
-display_width, display_height = 1000, 750
+display_width, display_height = 1366, 768
 gameDisplay = pygame.display.set_mode((display_width, display_height), pygame.FULLSCREEN)
 gameDisplay.fill(white)
 clock = pygame.time.Clock()
