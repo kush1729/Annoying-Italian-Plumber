@@ -37,7 +37,17 @@ duck = pygame.image.load("marioduck.png")
 
 vorteximage = pygame.image.load("vortex.png")
 
+sea = pygame.image.load("sea.png")
+battleship = pygame.image.load("battleship.png")
+boat = pygame.image.load("boat.png")
 
+<<<<<<< HEAD
+=======
+
+
+
+
+>>>>>>> d41eb8ff1e7878594a0c7f8263bb95027b4bcfa2
 opennote1 = pygame.image.load("opennote.png")
 opennote2 = pygame.image.load("opennote2.png")
 opennote3 = pygame.image.load("opennote3.png")
@@ -262,6 +272,19 @@ def pause_screen():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_p:
                     return
+
+        
+def vortex(xwidth = 1500, yheight = 1500):
+    
+    
+    for i in range(360):
+        clock.tick(90)
+        
+        theimage = pygame.transform.rotate(vorteximage, i)
+##        theimage.center = display_width/2, display_height/2
+        secondimage = pygame.transform.rotate(walklistright[0], 2 * i)
+        background([theimage, secondimage], [display_width/2 - 1500/2, display_width/2], [display_height/2 - 1500/2, display_height/2])
+        pygame.display.update() 
                 
 #------------------------------------------------------------------------------------------
 # INTRO ANIMATIONS:
@@ -476,20 +499,10 @@ def firstintro(stage = 1):
     
         
         
+     
         
-def vortex(xwidth = 1500, yheight = 1500):
-    
-    
-    for i in range(360):
-        clock.tick(90)
-        
-        theimage = pygame.transform.rotate(vorteximage, i)
-##        theimage.center = display_width/2, display_height/2
-        secondimage = pygame.transform.rotate(walklistright[0], 2 * i)
-        background([theimage, secondimage], [display_width/2 - 1500/2, display_width/2], [display_height/2 - 1500/2, display_height/2])
-        pygame.display.update()      
-        
-        
+
+      
         
         
 
@@ -655,6 +668,36 @@ def hitlerrun():
     gameDisplay.fill(white)
     hitlerrun()
 
+def launchgame():
+    # Changeables:
+    seayposition = display_height - 50
+    seaxposition = 0
+    boatx = 100
+    battleshipx = display_width - 300
+    print boatx, battleshipx
+    boaty = seayposition
+    battleshipy = seayposition - 70
+
+
+    # --------------------------------
+    background([sea, boat], [seaxposition, boatx], [seayposition, boaty])
+    pygame.display.update()
+    time.sleep(0.5)
+    walk(display_width + 30, battleshipx, battleshipy, [None, battleship, None, None], direction = "Left", changewidth = 5, backgroundimagelist = [sea, boat], backgroundx = [seaxposition, boatx], backgroundy = [seayposition, boaty]) 
+    pygame.display.update()
+    background([sea, boat, battleship], [seaxposition, boatx, battleshipx], [seayposition, boaty, battleshipy])
+    pygame.display.update()
+    time.sleep(0.5)
+    
+    dialoguebox("You are entering British waters... Turn back or we will open Fire!", "Large", [battleshipx - 100, battleshipy])
+    
+    pygame.display.update()
+    time.sleep(5)
+    pygame.quit()
+    quit()
+    
+    
+
 
                 
 # CHARACTER FUNCTIONS:
@@ -741,13 +784,6 @@ def gameintro():
 
         if intro:
             firstgameloop()           
-
-            
-            
-
-            
-            
-            
             intro = False
 
 def firstgameloop():
@@ -980,7 +1016,7 @@ def firstgameloop():
 
 
 
-gameintro()
+launchgame()
 
 
 
