@@ -40,6 +40,10 @@ vorteximage = pygame.image.load("vortex.png")
 sea = pygame.image.load("sea.png")
 battleship = pygame.image.load("battleship.png")
 boat = pygame.image.load("boat.png")
+randomdude = pygame.image.load("standstraight.png")
+smallstandright = pygame.image.load("smallmario.png")
+smallduck = pygame.image.load("smallmarioduck.png")
+smallstandleft = pygame.transform.flip(smallstandright, True, False)
 
 
 
@@ -224,7 +228,7 @@ def fabulous(xposition, yposition, colourlist = [yellow, gold, goldenrod]):
         explode = False
 
 
-def dialoguebox(text, size, (xposition, yposition), timegap = 0.05, colour = black, textsize = None):
+def dialoguebox(text, size, (xposition, yposition), timegap = 0.05, colour = black, textsize = None, EOL = None):
 
     ## (text, colour, (ht, requiredwidth), size = "smallmed", timegap = 0.1,  EOL = None):
     
@@ -236,23 +240,29 @@ def dialoguebox(text, size, (xposition, yposition), timegap = 0.05, colour = bla
         gameDisplay.blit(theimage, [xposition - 100 ,yposition - 350])
         if textsize == None:
             textsize = 35
+        if EOL == None:
+            EOL = 16
 #(text, colour, (ht, requiredwidth), size = "smallmed", timegap = 0.1,  EOL = None)
-        writing(text, colour, (yposition - 300, xposition - 50), size = textsize, timegap = timegap, EOL = 16)
+        writing(text, colour, (yposition - 300, xposition - 50), size = textsize, timegap = timegap, EOL = EOL)
         
 
     elif size.lower() == "medium":
         gameDisplay.blit(theimage, [xposition - 90, yposition - 300])
         if textsize == None:
             textsize = 30
+        if EOL == None:
+            EOL = 13
 
-        writing(text, colour, (yposition - 250, xposition - 30), size = textsize, timegap = timegap, EOL = 13)
+        writing(text, colour, (yposition - 250, xposition - 30), size = textsize, timegap = timegap, EOL = EOL)
 
                 
     elif size.lower() == "small":
         gameDisplay.blit(theimage, [xposition - 50 ,yposition - 140])
         if textsize == None:
             textsize = 15
-        writing(text, colour, (yposition - 90, xposition), size = textsize, timegap = timegap, EOL = 18)
+        if EOL == None:
+            EOL = 18
+        writing(text, colour, (yposition - 90, xposition), size = textsize, timegap = timegap, EOL = EOL)
     
 #---------------------------------------------------------------------------------------------
 
@@ -677,19 +687,85 @@ def launchgame():
 
 
     # --------------------------------
-    background([sea, boat], [seaxposition, boatx], [seayposition, boaty])
+    background([sea, randomdude, boat], [seaxposition, boatx + 10, boatx], [seayposition, boaty - 50, boaty])
     pygame.display.update()
     time.sleep(0.5)
-    walk(display_width + 30, battleshipx, battleshipy, [None, battleship, None, None], direction = "Left", changewidth = 5, backgroundimagelist = [sea, boat], backgroundx = [seaxposition, boatx], backgroundy = [seayposition, boaty]) 
+    walk(display_width + 30, battleshipx, battleshipy, [None, battleship, None, None], direction = "Left", changewidth = 5, backgroundimagelist = [sea, randomdude, boat], backgroundx = [seaxposition, boatx + 10, boatx], backgroundy = [seayposition, boaty - 50, boaty]) 
     pygame.display.update()
-    background([sea, boat, battleship], [seaxposition, boatx, battleshipx], [seayposition, boaty, battleshipy])
+    background([sea, randomdude, boat, battleship], [seaxposition, boatx + 10, boatx, battleshipx], [seayposition, boaty - 50, boaty, battleshipy])
     pygame.display.update()
     time.sleep(0.5)
     
-    dialoguebox("You are entering British waters... Turn back or we will open Fire!", "Large", [battleshipx - 100, battleshipy])
+    dialoguebox("El Draco, we, the Spanish, WILL invade England... surrender if you value your life!", "Large", [battleshipx - 100, battleshipy])
     
     pygame.display.update()
-    time.sleep(5)
+    gameDisplay.fill(white)
+    time.sleep(2)
+    background([sea, randomdude, boat, battleship], [seaxposition, boatx + 10, boatx, battleshipx], [seayposition, boaty - 50, boaty, battleshipy])
+    dialoguebox("NEVER! You will have to kill me!!", "Medium", [boatx + 10, boaty - 50])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(0.5)
+    background([sea, randomdude, boat, battleship], [seaxposition, boatx + 10, boatx, battleshipx], [seayposition, boaty - 50, boaty, battleshipy])
+    dialoguebox("I will never surrender!!", "Medium", [boatx + 10, boaty - 50])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(0.5)
+    background([sea, randomdude, boat, battleship], [seaxposition, boatx + 10, boatx, battleshipx], [seayposition, boaty - 50, boaty, battleshipy])
+    dialoguebox("I fight for freedom and justice and not even the Spanish Armada can crush me!!", "Large", [boatx + 10, boaty - 50], textsize = 30, EOL = 18)
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(0.5)
+    marioheight = 0
+    while marioheight < boaty:
+        clock.tick(20)
+
+        
+        theimage = pygame.transform.rotate(smallduck, marioheight)
+        if marioheight <= boaty-50:
+            background([sea, randomdude, theimage, boat, battleship], [seaxposition, boatx + 10, boatx + 10, boatx, battleshipx], [seayposition, boaty - 50, marioheight, boaty, battleshipy])
+        else:
+            background([sea, theimage, boat, battleship], [seaxposition,  boatx + 10, boatx, battleshipx], [seayposition, marioheight, boaty, battleshipy])
+
+        pygame.display.update()
+##        time.sleep(1)
+        gameDisplay.fill(white)
+        if marioheight + 10 <= boaty:
+            marioheight += 10
+        else:
+            marioheight = boaty
+
+    theimage = pygame.transform.rotate(smallduck, 270)
+    background([sea, theimage, boat, battleship], [seaxposition, boatx + 10, boatx, battleshipx], [seayposition, boaty - 5, boaty, battleshipy])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(1)
+
+    background([sea, smallstandright, boat, battleship], [seaxposition, boatx + 10, boatx, battleshipx], [seayposition, boaty - 50, boaty, battleshipy])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(0.5)
+          
+    background([sea, smallstandright, boat, battleship], [seaxposition, boatx + 10, boatx, battleshipx], [seayposition, boaty - 50, boaty, battleshipy])
+    dialoguebox("Uhhh, where am I?", "Small", [boatx + 10, boaty - 50 ])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(0.5)
+    background([sea, smallstandleft, boat, battleship], [seaxposition, boatx + 10, boatx, battleshipx], [seayposition, boaty - 50, boaty, battleshipy])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(0.5)
+    background([sea, smallstandright, boat, battleship], [seaxposition, boatx + 10, boatx, battleshipx], [seayposition, boaty - 50, boaty, battleshipy])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(0.5)
+    background([sea, smallstandright, boat, battleship], [seaxposition, boatx + 10, boatx, battleshipx], [seayposition, boaty - 50, boaty, battleshipy])
+
+    dialoguebox("OH NOOO!", "Medium", [boatx + 10, boaty])
+    pygame.display.update()
+    time.sleep(3)
+
+
     pygame.quit()
     quit()
     
