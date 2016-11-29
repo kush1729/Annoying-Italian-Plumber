@@ -38,20 +38,21 @@ duck = pygame.image.load("marioduck.png")
 vorteximage = pygame.image.load("vortex.png")
 
 sea = pygame.image.load("sea.png")
-battleship = pygame.image.load("battleship.png")
+battleship1 = pygame.image.load("battleship.png")
 boat = pygame.image.load("boat.png")
 randomdude = pygame.image.load("standstraight.png")
 smallstandright = pygame.image.load("smallmario.png")
 smallduck = pygame.image.load("smallmarioduck.png")
 smallstandleft = pygame.transform.flip(smallstandright, True, False)
+battleship = pygame.transform.flip(battleship1, True, False)
 
-<<<<<<< HEAD
-=======
-
-
-
-
->>>>>>> d41eb8ff1e7878594a0c7f8263bb95027b4bcfa2
+##<<<<<<< HEAD
+##=======
+##
+##
+##
+##
+##>>>>>>> d41eb8ff1e7878594a0c7f8263bb95027b4bcfa2
 opennote1 = pygame.image.load("opennote.png")
 opennote2 = pygame.image.load("opennote2.png")
 opennote3 = pygame.image.load("opennote3.png")
@@ -287,7 +288,7 @@ def pause_screen():
 def vortex(xwidth = 1500, yheight = 1500):
     
     
-    for i in range(360):
+    for i in range(180):
         clock.tick(90)
         
         theimage = pygame.transform.rotate(vorteximage, i)
@@ -503,20 +504,8 @@ def firstintro(stage = 1):
         pygame.display.update()
         time.sleep(0.5)
         vortex()
-        return
-            
-        
-    
-        
-        
-     
-        
-
-      
-        
-        
-
-    
+        launchgame()
+   
 
 def hitlerrun():
     # Changeables:
@@ -684,93 +673,105 @@ def launchgame():
     seaxposition = 0
     boatx = 100
     battleshipx = display_width - 300
-    print boatx, battleshipx
-    boaty = seayposition
-    battleshipy = seayposition - 70
+
+    boatsize = boat.get_size()
+    battleshipsize = battleship.get_size()
+    boaty = seayposition - boatsize[1] + 25
+    battleshipy = seayposition - battleshipsize[1] + 15
+    
 
 
     # --------------------------------
-    background([sea, randomdude, boat], [seaxposition, boatx + 10, boatx], [seayposition, boaty - 50, boaty])
+    background([randomdude, boat, sea], [boatx + 10, boatx, seaxposition], [boaty - 50, boaty, seayposition])
     pygame.display.update()
     time.sleep(0.5)
-    walk(display_width + 30, battleshipx, battleshipy, [None, battleship, None, None], direction = "Left", changewidth = 5, backgroundimagelist = [sea, randomdude, boat], backgroundx = [seaxposition, boatx + 10, boatx], backgroundy = [seayposition, boaty - 50, boaty]) 
+    walk(display_width + 30, battleshipx, battleshipy, [None, battleship, None, None], direction = "Left", changewidth = 5, backgroundimagelist = [randomdude, boat, sea], backgroundx = [boatx + 10, boatx, seaxposition], backgroundy = [boaty - 50, boaty, seayposition]) 
     pygame.display.update()
-    background([sea, randomdude, boat, battleship], [seaxposition, boatx + 10, boatx, battleshipx], [seayposition, boaty - 50, boaty, battleshipy])
+    background([randomdude, boat, battleship, sea], [boatx + 10, boatx, battleshipx, seaxposition], [boaty - 50, boaty, battleshipy, seayposition])
     pygame.display.update()
     time.sleep(0.5)
     
-    dialoguebox("El Draco, we, the Spanish, WILL invade England... surrender if you value your life!", "Large", [battleshipx - 100, battleshipy])
-    
+    dialoguebox("El Draco, we, the Spanish, WILL invade England!", "Medium", [battleshipx - 130, battleshipy])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(1)
+    background([randomdude, boat, battleship, sea], [boatx + 10, boatx, battleshipx, seaxposition], [boaty - 50, boaty, battleshipy, seayposition])
+    dialoguebox("Surrender if you value your life!!", "Medium", [battleshipx - 130, battleshipy])
     pygame.display.update()
     gameDisplay.fill(white)
     time.sleep(2)
-    background([sea, randomdude, boat, battleship], [seaxposition, boatx + 10, boatx, battleshipx], [seayposition, boaty - 50, boaty, battleshipy])
+    background([randomdude, boat, battleship, sea], [boatx + 10, boatx, battleshipx, seaxposition], [boaty - 50, boaty, battleshipy, seayposition])
     dialoguebox("NEVER! You will have to kill me!!", "Medium", [boatx + 10, boaty - 50])
     pygame.display.update()
     gameDisplay.fill(white)
     time.sleep(0.5)
-    background([sea, randomdude, boat, battleship], [seaxposition, boatx + 10, boatx, battleshipx], [seayposition, boaty - 50, boaty, battleshipy])
+    background([randomdude, boat, battleship, sea], [boatx + 10, boatx, battleshipx, seaxposition], [boaty - 50, boaty, battleshipy, seayposition])
     dialoguebox("I will never surrender!!", "Medium", [boatx + 10, boaty - 50])
     pygame.display.update()
     gameDisplay.fill(white)
     time.sleep(0.5)
-    background([sea, randomdude, boat, battleship], [seaxposition, boatx + 10, boatx, battleshipx], [seayposition, boaty - 50, boaty, battleshipy])
-    dialoguebox("I fight for freedom and justice and not even the Spanish Armada can crush me!!", "Large", [boatx + 10, boaty - 50], textsize = 30, EOL = 18)
+    background([randomdude, boat, battleship, sea], [boatx + 10, boatx, battleshipx, seaxposition], [boaty - 50, boaty, battleshipy, seayposition])
+    dialoguebox("I fight for freedom and justice and no one can ever crush me!!", "Large", [boatx + 10, boaty - 50], textsize = 30, EOL = 16)
     pygame.display.update()
     gameDisplay.fill(white)
     time.sleep(0.5)
     marioheight = 0
     while marioheight < boaty:
         clock.tick(20)
-
+        
         
         theimage = pygame.transform.rotate(smallduck, marioheight)
         if marioheight <= boaty-50:
-            background([sea, randomdude, theimage, boat, battleship], [seaxposition, boatx + 10, boatx + 10, boatx, battleshipx], [seayposition, boaty - 50, marioheight, boaty, battleshipy])
+            background([randomdude, theimage, boat, battleship, sea], [boatx + 10, boatx + 10, boatx, battleshipx, seaxposition], [boaty - 50, marioheight, boaty, battleshipy, seayposition])
         else:
-            background([sea, theimage, boat, battleship], [seaxposition,  boatx + 10, boatx, battleshipx], [seayposition, marioheight, boaty, battleshipy])
+            background([theimage, boat, battleship, sea], [boatx + 10, boatx, battleshipx, seaxposition], [marioheight, boaty, battleshipy, seayposition])
 
         pygame.display.update()
 ##        time.sleep(1)
         gameDisplay.fill(white)
-        if marioheight + 10 <= boaty:
-            marioheight += 10
+        if marioheight + 20 <= boaty:
+            marioheight += 20
         else:
             marioheight = boaty
 
     theimage = pygame.transform.rotate(smallduck, 270)
-    background([sea, theimage, boat, battleship], [seaxposition, boatx + 10, boatx, battleshipx], [seayposition, boaty - 5, boaty, battleshipy])
+    background([theimage, boat, battleship, sea], [boatx + 10, boatx, battleshipx, seaxposition], [boaty - 5, boaty, battleshipy, seayposition])
     pygame.display.update()
     gameDisplay.fill(white)
-    time.sleep(1)
+    time.sleep(1.5)
 
-    background([sea, smallstandright, boat, battleship], [seaxposition, boatx + 10, boatx, battleshipx], [seayposition, boaty - 50, boaty, battleshipy])
+    background([smallstandright, boat, battleship, sea], [boatx + 10, boatx, battleshipx, seaxposition], [boaty - 50, boaty, battleshipy, seayposition])
     pygame.display.update()
     gameDisplay.fill(white)
     time.sleep(0.5)
+    
+    background([smallstandleft, boat, battleship, sea], [boatx + 10, boatx, battleshipx, seaxposition], [boaty - 50, boaty, battleshipy, seayposition])
+    dialoguebox("It's a me a Ma-", "Small", [boatx + 10, boaty - 50 ])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(0.1)
           
-    background([sea, smallstandright, boat, battleship], [seaxposition, boatx + 10, boatx, battleshipx], [seayposition, boaty - 50, boaty, battleshipy])
+    background([smallstandright, boat, battleship, sea], [boatx + 10, boatx, battleshipx, seaxposition], [boaty - 50, boaty, battleshipy, seayposition])
     dialoguebox("Uhhh, where am I?", "Small", [boatx + 10, boaty - 50 ])
     pygame.display.update()
     gameDisplay.fill(white)
     time.sleep(0.5)
-    background([sea, smallstandleft, boat, battleship], [seaxposition, boatx + 10, boatx, battleshipx], [seayposition, boaty - 50, boaty, battleshipy])
+    background([smallstandleft, boat, battleship, sea], [boatx + 10, boatx, battleshipx, seaxposition], [boaty - 50, boaty, battleshipy, seayposition])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(1)
+    background([smallstandright, boat, battleship, sea], [boatx + 10, boatx, battleshipx, seaxposition], [boaty - 50, boaty, battleshipy, seayposition])
     pygame.display.update()
     gameDisplay.fill(white)
     time.sleep(0.5)
-    background([sea, smallstandright, boat, battleship], [seaxposition, boatx + 10, boatx, battleshipx], [seayposition, boaty - 50, boaty, battleshipy])
-    pygame.display.update()
-    gameDisplay.fill(white)
-    time.sleep(0.5)
-    background([sea, smallstandright, boat, battleship], [seaxposition, boatx + 10, boatx, battleshipx], [seayposition, boaty - 50, boaty, battleshipy])
+    background([smallstandright, boat, battleship, sea], [boatx + 10, boatx, battleshipx, seaxposition], [boaty - 50, boaty, battleshipy, seayposition])
 
     dialoguebox("OH NOOO!", "Medium", [boatx + 10, boaty])
     pygame.display.update()
     time.sleep(3)
 
 
-    pygame.quit()
-    quit()
+    hitlerrun()
     
     
 
@@ -879,7 +880,7 @@ def firstgameloop():
     back1x, back2x = backx - display_width, backx + display_width
     stageonedone = stage2done = stage3done = stage4done = checkjump = False
     countcave = 0
-    backgroundlock = caveon = False
+    backgroundlock = caveon = leftlock = False
     
     # -------------------------
     firstintro()
@@ -930,7 +931,7 @@ def firstgameloop():
         elif movement[pygame.K_LEFT] and movement[pygame.K_UP]:
             
             direction = "Left"
-            if not backgroundlock:
+            if not backgroundlock and not leftlock:
                 backx += 15
                 back1x += 15
                 back2x += 15
@@ -939,10 +940,16 @@ def firstgameloop():
             if yposition <> groundheight:
                 imagenumber = -2
             else:
-                if imagenumber < lastimage - 2:
-                    imagenumber += 1
+                if leftlock:
+                    if xposition <= 15:
+                        dialoguebox("Apparently I can't go that way", "Small", [xposition + 10, yposition])
+                        xposition = xposition
+                    else:
+                        xposition -= 15
                 else:
-                    imagenumber = 1   
+                    xposition -= 15
+
+
             if yposition <= groundheight - jumpheight or goingup == False:
                 if yposition < groundheight - 10:
                     yposition += 20
@@ -982,12 +989,22 @@ def firstgameloop():
             if not stageonedone:
                 stageonedone = True
             direction = "Left"
-            if not backgroundlock:
+            if not backgroundlock and not leftlock:
                 backx += 15
                 back1x += 15
                 back2x += 15
             else:
-                xposition -= 15
+                if leftlock:
+                    if xposition <= 15:
+                        dialoguebox("Apparently I can't go that way", "Small", [xposition + 10, yposition])
+                        xposition = xposition
+                    else:
+                        xposition -= 15
+                else:
+                    xposition -= 15
+
+            
+                    
             if yposition <> groundheight:
                 yposition = groundheight
             goingup = True
@@ -1035,6 +1052,7 @@ def firstgameloop():
             back1x, backx, back2x = backx, back2x, back2x + display_width
             if stage3done:
                 countcave += 1
+                
 
             
         if back2x - display_width >= display_width:
@@ -1054,7 +1072,7 @@ def firstgameloop():
         if backgroundlock and xposition > display_width - 310:
             pass
         else:
-            if backgroundlock and xposition == display_width/2 and not stage4done:
+            if backgroundlock and xposition >= display_width/2 and not stage4done:
                 firstintro(4)
                 stage4done = True
             if stage4done:
@@ -1085,14 +1103,15 @@ def firstgameloop():
 ##            walk(initmariox, display_width/2, display_height/2 + 150,  imagelist, direction = direct, backgroundimagelist = [genericbackground], backgroundx = [0], backgroundy = [0]) 
             
             firstintro(3)
-            stage3done = True 
+            stage3done = True
+            leftlock = True
             countcave = 0
             background([genericbackground, walklistright[0]], [0, display_width/2 + 3], [0, groundheight])
 
 
 
 
-launchgame()
+gameintro()
 
 
 
