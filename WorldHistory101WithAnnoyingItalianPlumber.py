@@ -46,13 +46,7 @@ smallduck = pygame.image.load("smallmarioduck.png")
 smallstandleft = pygame.transform.flip(smallstandright, True, False)
 battleship = pygame.transform.flip(battleship1, True, False)
 
-##<<<<<<< HEAD
-##=======
-##
-##
-##
-##
-##>>>>>>> d41eb8ff1e7878594a0c7f8263bb95027b4bcfa2
+
 opennote1 = pygame.image.load("opennote.png")
 opennote2 = pygame.image.load("opennote2.png")
 opennote3 = pygame.image.load("opennote3.png")
@@ -69,12 +63,20 @@ hitler1 = pygame.image.load("hitler1.png")
 destroyer = pygame.image.load("destroyer.png")
 cave = pygame.image.load("cave.png")
 
+earlyman = pygame.image.load("earlyman.png")
+
+surprisedman = pygame.image.load("surprisedman.png")
+evilman = pygame.image.load("evilearlyman.png")
+
+
 
 
 # Background images:
 hitlerbackgroundimage = pygame.image.load("hitlerbackground.png")
 genericbackground = pygame.image.load("genericbackground.png")
 notebackground = pygame.image.load("note.png")
+snowbackground = pygame.image.load("snowbackground.png")
+snowholebackground = pygame.image.load("snowholebackground.png")
 
 
 # Left
@@ -96,7 +98,7 @@ dialoguedict = {"Large" : largedialogue, "Medium":mediumdialogue, "Small":smalld
 
 
 #IMPORTANT CONSTANTS FOR AND DESIGN OF GAME DISPLAY------------------------------------------
-display_width, display_height = 1366, 768
+display_width, display_height = 1000, 750
 gameDisplay = pygame.display.set_mode((display_width, display_height), pygame.FULLSCREEN)
 gameDisplay.fill(white)
 clock = pygame.time.Clock()
@@ -772,10 +774,204 @@ def launchgame():
 
 
     hitlerrun()
-    
+
+def iceage():
+    # Changeables:
+    backx, backy = 0, 0
+    earlymanx = 100
+    floorheight = display_height/2 + 100
+    mariox = display_width/2 + 100
+    jumpheight = 80
     
 
 
+    
+    background([snowbackground, earlyman], [backx, earlymanx], [backy, floorheight])
+    dialoguebox("GRRAAAHHH! Hurk cold!", "Medium", [earlymanx, floorheight])
+    pygame.display.update()
+    time.sleep(1)
+    gameDisplay.fill(white)
+    background([snowbackground, earlyman], [backx, earlymanx], [backy, floorheight])
+    dialoguebox("Hurk want FIRE !!!", "Medium", [earlymanx, floorheight])
+    pygame.display.update()
+    time.sleep(1)
+    gameDisplay.fill(white)
+    marioheight = 0
+
+
+
+    while marioheight < floorheight:
+        clock.tick(20)
+        
+        
+        theimage = pygame.transform.rotate(duck, marioheight)
+        if marioheight <= floorheight-50:
+            background([snowbackground, earlyman, theimage], [backx, earlymanx, mariox], [backy, floorheight, marioheight])
+        else:
+            background([snowholebackground, surprisedman], [backx, earlymanx], [backy, floorheight])
+        pygame.display.update()
+
+        gameDisplay.fill(white)
+        if marioheight + 20 <= floorheight:
+            marioheight += 20
+        else:
+            marioheight = floorheight
+
+    background([snowholebackground, surprisedman], [backx, earlymanx], [backy, floorheight])
+    pygame.display.update()
+    time.sleep(2.5)
+
+    marioheight = floorheight + 30
+    while marioheight > floorheight - jumpheight:
+        clock.tick(20)
+        theimage = walklistleft[len(walklistleft) - 2]
+        if marioheight > floorheight:
+            background([snowholebackground, surprisedman], [backx, earlymanx], [backy, floorheight])
+        else:
+            background([snowholebackground, surprisedman, theimage], [backx, earlymanx, mariox], [backy, floorheight, marioheight])
+        pygame.display.update()
+        gameDisplay.fill(white)
+        marioheight -= 10
+
+    time.sleep(0.3)
+
+    while marioheight < floorheight + 40:
+        clock.tick(20)
+        theimage = walklistleft[len(walklistleft) - 2]
+        
+        background([snowholebackground, surprisedman, theimage], [backx, earlymanx, mariox], [backy, floorheight, marioheight])
+        pygame.display.update()
+        gameDisplay.fill(white)
+        if marioheight + 10 <= floorheight + 40:
+            marioheight += 10
+        else:
+            marioheight = floorheight + 40
+    
+    background([snowholebackground, surprisedman, walklistleft[0]], [backx, earlymanx, mariox], [backy, floorheight, marioheight])
+    pygame.display.update()
+    time.sleep(1)
+    dialoguebox("It's a me a Ma-... sorry force of habit...", "Medium", [mariox, marioheight])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(0.1)
+    background([snowholebackground, surprisedman, walklistleft[0]], [backx, earlymanx, mariox], [backy, floorheight, marioheight])
+    dialoguebox("Who- No what the hell are you?", "Medium", [mariox, floorheight])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(0.5)
+    background([snowholebackground, surprisedman, walklistleft[0]], [backx, earlymanx, mariox], [backy, floorheight, marioheight])
+    dialoguebox("Huuurrrkkkk....", "Medium", [earlymanx, floorheight])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(0.5)
+    background([snowholebackground, surprisedman, walklistleft[0]], [backx, earlymanx, mariox], [backy, floorheight, marioheight])
+    dialoguebox("Hi Hurk, nice to meet you, I'm Ma-", "Medium", [mariox, marioheight])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(0.1)
+    background([snowholebackground, evilman, walklistleft[0]], [backx, earlymanx, mariox], [backy, floorheight, marioheight])
+    dialoguebox("....hungry", "Medium", [earlymanx, floorheight])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(0.2)
+    background([snowholebackground, evilman, walklistleft[0]], [backx, earlymanx, mariox], [backy, floorheight, marioheight])
+    dialoguebox("Okay not nice to meet you...", "Medium", [mariox, marioheight])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(0.5)
+
+    walk(mariox, mariox + 75, marioheight, walklistright, "Right", backgroundimagelist = [snowholebackground, evilman], backgroundx = [backx, earlymanx], backgroundy = [backy, floorheight])
+    pygame.display.update()
+    mariox += 75
+    background([snowholebackground, evilman, walklistleft[0]], [backx, earlymanx, mariox], [backy, floorheight, marioheight])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    walk(earlymanx, earlymanx + 50, floorheight, [None, evilman, None, None], "Right", changewidth = 25, backgroundimagelist = [snowholebackground, walklistleft[0]], backgroundx = [backx, mariox], backgroundy = [backy, marioheight])
+    earlymanx += 50
+    background([snowholebackground, evilman, walklistleft[0]], [backx, earlymanx, mariox], [backy, floorheight, marioheight])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(1)
+    background([snowholebackground, evilman, walklistleft[0]], [backx, earlymanx, mariox], [backy, floorheight, marioheight])
+    dialoguebox("C'mon old boy he's a neanderthal, you can outsmart him...", "Small", [mariox, marioheight])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(0.2)
+
+    background([snowholebackground, evilman, walklistleft[0]], [backx, earlymanx, mariox], [backy, floorheight, marioheight])
+    dialoguebox("Ah! I know! He'll fall for the easiest trick in the book... coz the book's not been written yet!", "Large", [mariox - 60, marioheight])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(0.2)
+
+    background([snowholebackground, evilman, walklistleft[0]], [backx, earlymanx, mariox], [backy, floorheight, marioheight])
+    dialoguebox("Oh Hurk look behind me!", "Medium", [mariox, marioheight])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(0.2)
+
+    background([snowholebackground, evilman, walklistright[0]], [backx, earlymanx, mariox], [backy, floorheight, marioheight])
+    pygame.display.update()
+    time.sleep(0.5)
+    walk(earlymanx, mariox - 200, floorheight, [None, evilman, None, None], 'Right', changewidth = 30,  backgroundimagelist = [snowholebackground, walklistright[0]], backgroundx = [backx, mariox], backgroundy = [backy, marioheight]) 
+    earlymanx = mariox - 200
+    background([snowholebackground, evilman, walklistleft[0]], [backx, earlymanx, mariox], [backy, floorheight, marioheight])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    
+    
+    background([snowholebackground, evilman, walklistleft[0]], [backx, earlymanx, mariox], [backy, floorheight, marioheight])
+    dialoguebox("Damn it!", "Small", [mariox, marioheight])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(0.5)
+
+    background([snowholebackground, evilman, walklistleft[0]], [backx, earlymanx, mariox], [backy, floorheight, marioheight])
+    dialoguebox("Awesome... I've fallen from the pan to the fire...", "Medium", [mariox, marioheight])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(0.1)
+
+    background([snowholebackground, surprisedman, walklistleft[0]], [backx, earlymanx, mariox], [backy, floorheight, marioheight])
+    dialoguebox("F-f-fire?", "Small", [earlymanx, floorheight])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(0.5)
+
+    background([snowholebackground, surprisedman, walklistleft[0]], [backx, earlymanx, mariox], [backy, floorheight, marioheight])
+    dialoguebox("YES! FIRE! YES! I can get you fire!", "Medium", [mariox, marioheight])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(0.5)
+
+    background([snowholebackground, earlyman, walklistleft[0]], [backx, earlymanx, mariox], [backy, floorheight, marioheight])
+    dialoguebox("Hmph.....", "Medium", [earlymanx, floorheight])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(1)
+
+    background([snowholebackground, evilman, walklistleft[0]], [backx, earlymanx, mariox], [backy, floorheight, marioheight])
+    dialoguebox("GO!!!!", "Medium", [earlymanx, floorheight])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(0.5)
+
+    walk(mariox, display_width + 10, marioheight, walklistright, "Right", changewidth = 30, backgroundimagelist = [snowholebackground, evilman], backgroundx = [backx, earlymanx], backgroundy = [backy, floorheight])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(0.5)
+    
+
+    
+    pygame.quit()
+    quit()
+    
+
+
+    
+    
+
+# ----------------Animations done done--------------------------
                 
 # CHARACTER FUNCTIONS:
 def walk(initx, finx, yposition, imagelist, direction, changewidth = 10, fps = 15, backgroundimagelist = None, backgroundx = None, backgroundy = None):
@@ -860,7 +1056,7 @@ def gameintro():
 
 
         if intro:
-            firstgameloop()           
+            iceage()           
             intro = False
 
 def firstgameloop():
