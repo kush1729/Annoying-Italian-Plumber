@@ -844,9 +844,9 @@ def gameintro():
         while not Ready:
             message_to_screen("Adjust the Screen and then click Start", red, (display_width/2, 100), size = "medium")
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    quit()
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                     pygame.quit()
+                    quit()
                     
             Ready = button("Start", display_width/2 - 50, display_height/2 - 50, 100, 100, green, darkgreen, action = "Ready")
 
