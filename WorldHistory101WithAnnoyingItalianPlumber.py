@@ -192,35 +192,22 @@ def writing(text, colour, (ht, requiredwidth), size = "smallmed", timegap = 0.1,
                 elif count1 % EOL >= 3:
                     theindex = letters
                     text = text[:theindex] + "- " + text[theindex:]
-                    count1 = EOL + 1
+                    #count1 = EOL + 1
                     flag = False
-
-    
-
     for letters in text:
-        if EOL <> None:
-                        
+        if EOL <> None:         
             message_to_screen(numberofspaces + letters, colour, (requiredwidth, ht), size)
             pygame.display.update()
             numberofspaces += "     "
             count += 1
             if count % EOL == 0:
                 flag = True
-
-                
             if flag == True:
                 if letters.isspace() == True:
-
                     ht += h
-                    
                     numberofspaces = ""
                     flag = False
-##                    
 ##                elif count % EOL == 3:
-##                    
-
-                
-            
             time.sleep(timegap)
 
 
@@ -1085,8 +1072,8 @@ def brickbreakerintro():
     time.sleep(0.5)
 
     background([trumpbackground, trumpleft, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
-    theimage = pygame.transform.rotate(dialoguedict["Medium"], 270)
-    dialoguebox("BOO ! YOU STINK! And your hair looks like something died in there!", "Medium", [100, display_height/2], EOL = 4, imagechange = theimage)
+    theimage = pygame.transform.rotate(dialoguedict["Large"], 270)
+    dialoguebox("BOO ! YOU STINK! And your hair looks like something died in there!", "Medium", [150, display_height/2], EOL = 6, imagechange = theimage)
     pygame.display.update()
     time.sleep(0.5)
 
@@ -1097,13 +1084,13 @@ def brickbreakerintro():
 
     background([trumpbackground, trumpleft, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
     theimage = pygame.transform.rotate(dialoguedict["Large"], 270)
-    dialoguebox("You take him out coz you like him so much!", "Large", [190, display_height/2 + 50], EOL = 10, imagechange = theimage)
+    dialoguebox("You take him out coz you like him so much!", "Medium", [150, display_height/2 + 50], EOL = 8, imagechange = theimage)
     pygame.display.update()
     time.sleep(0.5)
 
     background([trumpbackground, trumpleft, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
     theimage = pygame.transform.rotate(dialoguedict["Large"], 270)
-    dialoguebox("YEAH! We're voting for Hillary Clinton you fat pumpkin with a terrible wig!", "Medium", [150, display_height/2], EOL = 10, imagechange = theimage)
+    dialoguebox("YEAH! We're voting for Hillary Clinton you fat pumpkin with a terrible wig!", "Medium", [150, display_height/2], EOL = 8, imagechange = theimage)
     pygame.display.update()
     time.sleep(0.5)
 
@@ -1138,7 +1125,7 @@ def brickbreakerintro():
     time.sleep(0.5)
 
     background([trumpbackground, suspicioustrump, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
-    dialoguebox("Your campaign must be the worst one anyone has EVER seen!", "Medium", [mariox, marioheight])
+    dialoguebox("Your campaign must be the worst one anyone has EVER seen!", "Medium", [mariox - 100, marioheight])
     pygame.display.update()
     time.sleep(0.5)
 
@@ -1148,7 +1135,7 @@ def brickbreakerintro():
     time.sleep(0.5)
 
     background([trumpbackground, trumpfingerraise, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
-    dialoguebox("I mean absolutely terrible!", "Medium", [mariox, marioheight])
+    dialoguebox("I mean absolutely terrible!", "Medium", [mariox - 50, marioheight])
     pygame.display.update()
     time.sleep(0.5)
 
@@ -1158,7 +1145,7 @@ def brickbreakerintro():
     time.sleep(0.5)
 
     background([trumpbackground, trumpfingerraise, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
-    dialoguebox("You'll have to say THE absolutely most ridiculous things ever...", "Medium", [mariox, marioheight])
+    dialoguebox("You'll have to say THE absolutely most ridiculous things ever...", "Medium", [mariox - 75, marioheight])
     pygame.display.update()
     time.sleep(0.5)
 
@@ -1168,7 +1155,7 @@ def brickbreakerintro():
     time.sleep(0.5)
 
     background([trumpbackground, suspicioustrump, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
-    dialoguebox("So that I can tell my kids that if YOU became president then so can they...", "Large", [mariox - 100, marioheight])
+    dialoguebox("So that I can tell my kids that if YOU became president then so can they...", "Large", [mariox - 150, marioheight])
     pygame.display.update()
     time.sleep(0.5)
 
@@ -1189,7 +1176,7 @@ def brickbreakerintro():
     time.sleep(0.5)
 
     background([trumpbackground, suspicioustrump, podiumimage], [backx, trumpx, podiumx], [backy, trumpy, podiumy])
-    dialoguebox("Phew...I thought the Mexican was going to ask me to shave my head...", "Medium", [trumpdialoguex, trumpdialoguey])
+    dialoguebox("Phew...that Mexican is gone...", "Medium", [trumpdialoguex, trumpdialoguey])
     pygame.display.update()
     gameDisplay.fill(white)
     time.sleep(0.5)
