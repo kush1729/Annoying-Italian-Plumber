@@ -78,6 +78,8 @@ dinostandleft = pygame.transform.flip(dinostand, True, False)
 trump1 = pygame.image.load("trump1.png")
 trumpfingerraise = pygame.image.load("trumpfingerraise.png")
 podiumimage = pygame.image.load("podium.png")
+trumpcheer = pygame.image.load("trumpcheer.png")
+suspicioustrump = pygame.image.load("suspicioustrump.png")
 trumpleft = pygame.transform.flip(trump1, True, False)
 
 
@@ -1004,7 +1006,7 @@ def brickbreakerintro():
     
     
     while marioheight < display_height:
-        clock.tick(20)
+        clock.tick(50)
         theimage = pygame.transform.rotate(duck, marioheight)
         if marioheight > trumpy:
         
@@ -1015,8 +1017,8 @@ def brickbreakerintro():
         pygame.display.update()
 
         gameDisplay.fill(white)
-        if marioheight + 20 <= display_height:
-            marioheight += 20
+        if marioheight + 30 <= display_height:
+            marioheight += 30
         else:
             marioheight = display_height
 
@@ -1084,42 +1086,114 @@ def brickbreakerintro():
 
     background([trumpbackground, trumpleft, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
     theimage = pygame.transform.rotate(dialoguedict["Medium"], 270)
-    dialoguebox("BOO ! YOU STINK!", "Medium", [100, display_height/2], EOL = 4, imagechange = theimage)
+    dialoguebox("BOO ! YOU STINK! And your hair looks like something died in there!", "Medium", [100, display_height/2], EOL = 4, imagechange = theimage)
     pygame.display.update()
     time.sleep(0.5)
 
-    background([trumpbackground, trump1, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
+    background([trumpbackground, suspicioustrump, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
     dialoguebox("Can someone take this Mexican out!!", "Medium", [trumpdialoguex, trumpdialoguey])
     pygame.display.update()
     time.sleep(0.5)
 
     background([trumpbackground, trumpleft, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
     theimage = pygame.transform.rotate(dialoguedict["Large"], 270)
-    dialoguebox("You take him out coz you like him so much!", "Medium", [150, display_height/2], EOL = 10, imagechange = theimage)
+    dialoguebox("You take him out coz you like him so much!", "Large", [190, display_height/2 + 50], EOL = 10, imagechange = theimage)
     pygame.display.update()
     time.sleep(0.5)
 
     background([trumpbackground, trumpleft, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
     theimage = pygame.transform.rotate(dialoguedict["Large"], 270)
-    dialoguebox("YEAH! We're voting for Hillary you fat pumpkin!", "Medium", [150, display_height/2], EOL = 10, imagechange = theimage)
+    dialoguebox("YEAH! We're voting for Hillary Clinton you fat pumpkin with a terrible wig!", "Medium", [150, display_height/2], EOL = 10, imagechange = theimage)
     pygame.display.update()
     time.sleep(0.5)
 
-    background([trumpbackground, trump1, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
-    dialoguebox("First of all... I'm Italian... and maybe I can help you with your hillary-ous problem", "Large", [mariox, marioheight])
+    background([trumpbackground, suspicioustrump, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
+    dialoguebox("First of all I'm Italian... and maybe I can help you with your hillary-ous problem", "Large", [mariox - 100, marioheight])
     pygame.display.update()
     time.sleep(0.5)
 
-    background([trumpbackground, trump1, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
+    background([trumpbackground, suspicioustrump, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
     dialoguebox("I wish you could help your sense of humour", "Medium", [trumpdialoguex, trumpdialoguey])
     pygame.display.update()
     time.sleep(0.5)
 
     background([trumpbackground, trumpfingerraise, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
-    dialoguebox("If you could just show me Hillary's E-mails that's all I need!", "Large", [trumpdialoguex, trumpdialoguey])
+    dialoguebox("If you could just show me Hillary's E-mails that's all I need!", "Medium", [trumpdialoguex, trumpdialoguey])
     pygame.display.update()
     time.sleep(0.5)
+
+    background([trumpbackground, trumpcheer, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
+    dialoguebox("Then I would become President!", "Medium", [trumpdialoguex, trumpdialoguey])
+    pygame.display.update()
+    time.sleep(0.5)
+
+    background([trumpbackground, trumpcheer, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
+    dialoguebox("I'll do it but on one condition...", "Medium", [mariox, marioheight])
+    pygame.display.update()
+    time.sleep(0.5)
+
+    background([trumpbackground, suspicioustrump, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
+    dialoguebox("What?", "Small", [trumpdialoguex, trumpdialoguey - 100])
+    pygame.display.update()
+    time.sleep(0.5)
+
+    background([trumpbackground, suspicioustrump, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
+    dialoguebox("Your campaign must be the worst one anyone has EVER seen!", "Medium", [mariox, marioheight])
+    pygame.display.update()
+    time.sleep(0.5)
+
+    background([trumpbackground, trumpfingerraise, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
+    dialoguebox("Done.", "Small", [trumpdialoguex, trumpdialoguey - 100])
+    pygame.display.update()
+    time.sleep(0.5)
+
+    background([trumpbackground, trumpfingerraise, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
+    dialoguebox("I mean absolutely terrible!", "Medium", [mariox, marioheight])
+    pygame.display.update()
+    time.sleep(0.5)
+
+    background([trumpbackground, trumpfingerraise, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
+    dialoguebox("Yes...", "Small", [trumpdialoguex, trumpdialoguey - 100])
+    pygame.display.update()
+    time.sleep(0.5)
+
+    background([trumpbackground, trumpfingerraise, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
+    dialoguebox("You'll have to say THE absolutely most ridiculous things ever...", "Medium", [mariox, marioheight])
+    pygame.display.update()
+    time.sleep(0.5)
+
+    background([trumpbackground, suspicioustrump, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
+    dialoguebox("Sure. Why though?", "Small", [trumpdialoguex, trumpdialoguey - 100])
+    pygame.display.update()
+    time.sleep(0.5)
+
+    background([trumpbackground, suspicioustrump, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
+    dialoguebox("So that I can tell my kids that if YOU became president then so can they...", "Large", [mariox - 100, marioheight])
+    pygame.display.update()
+    time.sleep(0.5)
+
+    background([trumpbackground, trumpfingerraise, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
+    dialoguebox("I can assure you this will be the worst campaign you've ever seen", "Medium", [trumpdialoguex, trumpdialoguey])
+    pygame.display.update()
+    time.sleep(0.5)
+
+    background([trumpbackground, trumpfingerraise, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
+    dialoguebox("Okay then....", "Small", [mariox, marioheight])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(0.5)    
     
+    walk(mariox, display_width + 100, marioheight, walklistright, "Right", fps = 40, backgroundimagelist = [trumpbackground, trumpfingerraise, podiumimage], backgroundx = [backx, trumpx, podiumx], backgroundy = [backy, trumpy, podiumy])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(0.5)
+
+    background([trumpbackground, suspicioustrump, podiumimage], [backx, trumpx, podiumx], [backy, trumpy, podiumy])
+    dialoguebox("Phew...I thought the Mexican was going to ask me to shave my head...", "Medium", [trumpdialoguex, trumpdialoguey])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(0.5)
+
     
     pygame.quit()
     quit()
