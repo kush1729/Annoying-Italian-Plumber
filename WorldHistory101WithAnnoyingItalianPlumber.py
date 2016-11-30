@@ -63,10 +63,23 @@ hitler1 = pygame.image.load("hitler1.png")
 destroyer = pygame.image.load("destroyer.png")
 cave = pygame.image.load("cave.png")
 
+# Early Man Images
 earlyman = pygame.image.load("earlyman.png")
-
 surprisedman = pygame.image.load("surprisedman.png")
 evilman = pygame.image.load("evilearlyman.png")
+dinowalk1 = pygame.image.load("dino1.png")
+dinowalk2 = pygame.image.load("dino2.png")
+dinostand = pygame.image.load("dinostand.png")
+dinowalkleft1 = pygame.transform.flip(dinowalk1, True, False)
+dinowalkleft2 = pygame.transform.flip(dinowalk2, True, False)
+dinostandleft = pygame.transform.flip(dinostand, True, False)
+
+# BrickBreaker images:
+trump1 = pygame.image.load("trump1.png")
+trumpfingerraise = pygame.image.load("trumpfingerraise.png")
+podiumimage = pygame.image.load("podium.png")
+trumpleft = pygame.transform.flip(trump1, True, False)
+
 
 
 
@@ -77,6 +90,8 @@ genericbackground = pygame.image.load("genericbackground.png")
 notebackground = pygame.image.load("note.png")
 snowbackground = pygame.image.load("snowbackground.png")
 snowholebackground = pygame.image.load("snowholebackground.png")
+trumpbackground = pygame.image.load("trumpbackground.png")
+
 
 
 # Left
@@ -91,7 +106,7 @@ leftduck = pygame.transform.flip(duck, True, False)
 
 walklistright = [standright, walk1, walk2, walk3, jumpright, duck]
 walklistleft = [standleft, walk1left, walk2left, walk3left, jumpleft, leftduck]
-
+dinowalk = [dinowalkleft1, dinowalkleft2, dinostandleft]
 dialoguedict = {"Large" : largedialogue, "Medium":mediumdialogue, "Small":smalldialogue}
 
 
@@ -159,24 +174,21 @@ def writing(text, colour, (ht, requiredwidth), size = "smallmed", timegap = 0.1,
     
     count1 = count = 0
     flag = False
+    length = len(text)
     
     try: h = font_dict[size] + 5
     except: h = size + 5
 
-    for letters in text:
+    for letters in range(length):
         if EOL <> None:
-
             count1 += 1
             if count1 % EOL == 0:
-                flag = True
-                
+                flag = True   
             if flag == True:
-
-                if letters.isspace() == True:
-
+                if text[letters].isspace() == True:
                     flag = False
                 elif count1 % EOL >= 3:
-                    theindex = text.index(letters)
+                    theindex = letters
                     text = text[:theindex] + "- " + text[theindex:]
                     count1 = EOL + 1
                     flag = False
@@ -234,11 +246,13 @@ def fabulous(xposition, yposition, colourlist = [yellow, gold, goldenrod]):
         explode = False
 
 
-def dialoguebox(text, size, (xposition, yposition), timegap = 0.05, colour = black, textsize = None, EOL = None):
+def dialoguebox(text, size, (xposition, yposition), timegap = 0.05, colour = black, textsize = None, EOL = None, imagechange = None):
 
     ## (text, colour, (ht, requiredwidth), size = "smallmed", timegap = 0.1,  EOL = None):
-    
-    theimage = dialoguedict[size]
+    if imagechange == None:
+        theimage = dialoguedict[size]
+    else:
+        theimage = imagechange
 
     length = len(text)
     
@@ -775,6 +789,8 @@ def launchgame():
 
     hitlerrun()
 
+
+
 def iceage():
     # Changeables:
     backx, backy = 0, 0
@@ -960,18 +976,161 @@ def iceage():
     pygame.display.update()
     gameDisplay.fill(white)
     time.sleep(0.5)
+    iceagegameloop()
+
+def brickbreakerintro():
+    # Changeables:
+    backx, backy = 0, 0
+    mariosize = walk1.get_size()
+    trumpfingerheight = trumpfingerraise.get_size() 
+    podiumdimensions = podiumimage.get_size()
+    podiumx = display_width/2 - podiumdimensions[0]/2
+    podiumy = display_height - podiumdimensions[1]
+    groundheight = podiumy - trumpfingerheight[1]
+    backgroundsize = trumpbackground.get_size()
+    trumpx, trumpy = backgroundsize[0]/2 - trumpfingerheight[0]/2, groundheight + 20
+    trumpdialoguex, trumpdialoguey = trumpx - trumpfingerheight[0]/2, trumpy + 70
+    mariox = trumpx + 300
+    marioheight = 0
+    # ---------------------------------------------------------------------
+    
+    gameDisplay.fill(white)
+    background([trumpbackground, trumpfingerraise, podiumimage], [backx, trumpx, podiumx], [backy, trumpy, podiumy])
+    pygame.display.update()
+    time.sleep(0.5)
+    dialoguebox("Can't you see? I have huge hands!", "Medium", [trumpdialoguex, trumpdialoguey])
+    time.sleep(0.5)
+    gameDisplay.fill(white)
+    
+    
+    while marioheight < display_height:
+        clock.tick(20)
+        theimage = pygame.transform.rotate(duck, marioheight)
+        if marioheight > trumpy:
+        
+            background([trumpbackground, trump1, podiumimage, theimage], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
+        else:
+            background([trumpbackground, trumpfingerraise, podiumimage, theimage], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
+
+        pygame.display.update()
+
+        gameDisplay.fill(white)
+        if marioheight + 20 <= display_height:
+            marioheight += 20
+        else:
+            marioheight = display_height
+
+    time.sleep(1)
+
+
+
+    
+    while marioheight > display_height - mariosize[1] - 40:
+        clock.tick(20)
+        theimage = walklistleft[len(walklistleft) - 2]
+        
+        background([trumpbackground, trump1, podiumimage, theimage], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
+
+        pygame.display.update()
+        gameDisplay.fill(white)
+        marioheight -= 10
+
+    time.sleep(0.3)
+
+    while marioheight < display_height - mariosize[1]:
+        clock.tick(20)
+        theimage = walklistleft[len(walklistleft) - 2]
+        background([trumpbackground, trump1, podiumimage, theimage], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
+        pygame.display.update()
+        gameDisplay.fill(white)
+        if marioheight + 10 <= display_height - mariosize[1]:
+            marioheight += 10
+        else:
+            marioheight = display_height - mariosize[1]
+
+    
+    background([trumpbackground, trump1, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
+    pygame.display.update()
+    dialoguebox("It's a me a Ma-", "Medium", [mariox, marioheight])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    
+    
+    background([trumpbackground, trump1, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
+    dialoguebox("What is that caterpillar on your face?!", "Medium", [trumpdialoguex, trumpdialoguey])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(0.5)
     
 
+    background([trumpbackground, trump1, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
+    dialoguebox("What died on your head?", "Medium", [mariox, marioheight])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(0.5)
+
+    background([trumpbackground, trumpfingerraise, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
+    dialoguebox("I have the best hair...", "Medium", [trumpdialoguex, trumpdialoguey])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(0.5)
+
+
+    background([trumpbackground, trumpfingerraise, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
+    dialoguebox("My supporters LOVE me", "Medium", [trumpdialoguex, trumpdialoguey])
+    pygame.display.update()
+    gameDisplay.fill(white)
+    time.sleep(0.5)
+
+    background([trumpbackground, trumpleft, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
+    theimage = pygame.transform.rotate(dialoguedict["Medium"], 270)
+    dialoguebox("BOO ! YOU STINK!", "Medium", [100, display_height/2], EOL = 4, imagechange = theimage)
+    pygame.display.update()
+    time.sleep(0.5)
+
+    background([trumpbackground, trump1, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
+    dialoguebox("Can someone take this Mexican out!!", "Medium", [trumpdialoguex, trumpdialoguey])
+    pygame.display.update()
+    time.sleep(0.5)
+
+    background([trumpbackground, trumpleft, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
+    theimage = pygame.transform.rotate(dialoguedict["Large"], 270)
+    dialoguebox("You take him out coz you like him so much!", "Medium", [150, display_height/2], EOL = 10, imagechange = theimage)
+    pygame.display.update()
+    time.sleep(0.5)
+
+    background([trumpbackground, trumpleft, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
+    theimage = pygame.transform.rotate(dialoguedict["Large"], 270)
+    dialoguebox("YEAH! We're voting for Hillary you fat pumpkin!", "Medium", [150, display_height/2], EOL = 10, imagechange = theimage)
+    pygame.display.update()
+    time.sleep(0.5)
+
+    background([trumpbackground, trump1, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
+    dialoguebox("First of all... I'm Italian... and maybe I can help you with your hillary-ous problem", "Large", [mariox, marioheight])
+    pygame.display.update()
+    time.sleep(0.5)
+
+    background([trumpbackground, trump1, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
+    dialoguebox("I wish you could help your sense of humour", "Medium", [trumpdialoguex, trumpdialoguey])
+    pygame.display.update()
+    time.sleep(0.5)
+
+    background([trumpbackground, trumpfingerraise, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
+    dialoguebox("If you could just show me Hillary's E-mails that's all I need!", "Large", [trumpdialoguex, trumpdialoguey])
+    pygame.display.update()
+    time.sleep(0.5)
+    
     
     pygame.quit()
     quit()
     
+    
 
 
     
     
 
-# ----------------Animations done done--------------------------
+# ----------------Animations done done done--------------------------
                 
 # CHARACTER FUNCTIONS:
 def walk(initx, finx, yposition, imagelist, direction, changewidth = 10, fps = 15, backgroundimagelist = None, backgroundx = None, backgroundy = None):
@@ -1040,9 +1199,9 @@ def gameintro():
         while not Ready:
             message_to_screen("Adjust the Screen and then click Start", red, (display_width/2, 100), size = "medium")
             for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                    pygame.quit()
+                if event.type == pygame.QUIT:
                     quit()
+                    pygame.quit()
                     
             Ready = button("Start", display_width/2 - 50, display_height/2 - 50, 100, 100, green, darkgreen, action = "Ready")
 
@@ -1058,6 +1217,220 @@ def gameintro():
         if intro:
             iceage()           
             intro = False
+
+
+
+        
+
+
+def iceagegameloop():
+    gameon = True
+    groundheight = display_height/2 + 100
+    backx, back1x, back2x = -display_width, 0, display_width
+    backy, back1y, back2y = 0, 0, 0
+    fps = 10    
+    walk(-100, display_width/2, groundheight, walklistright, "Right", backgroundimagelist = [snowbackground, snowbackground, snowbackground], backgroundx = [backx, back1x, back2x], backgroundy = [backy, back1y, back2y])
+    pygame.display.update()
+    jumpheight = 120
+    xposition = display_width/2
+    imagenumber = 0
+    yposition = groundheight
+    lastimage = len(walklistright) - 1
+    direction = "Right"
+    backgroundlock = leftlock = False
+    dinodirection = "Left"
+    dinox = display_width + 10
+    mariosize = walk1.get_size()
+    dinosize = dinowalk1.get_size()
+    dinoy = groundheight + mariosize[1] - dinosize[1]
+    dinoimagelist = [dinowalk]
+    dinoimagenumber = 0
+    dinoonscreen = False
+    while gameon:
+        if not dinoonscreen:
+            whichdino = random.randint(0, len(dinoimagelist) - 1)
+
+            dinox = display_width + 10
+            dinoy = groundheight + mariosize[1] - dinosize[1]
+            dinoonscreen = True
+        clock.tick(fps)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    quit()
+
+        movement = pygame.key.get_pressed()
+        if movement[pygame.K_RIGHT] and movement[pygame.K_UP]:
+            direction = "Right"
+            if not backgroundlock:
+                backx -= 15
+                back1x -= 15
+                back2x -= 15
+            else:
+                xposition += 15
+            if yposition <> groundheight:
+                imagenumber = -2
+            else:
+                if imagenumber < lastimage - 2:
+                    imagenumber += 1
+                else:
+                    imagenumber = 1
+            if yposition <= groundheight - jumpheight or goingup == False:
+                if yposition < groundheight - 10:
+                    yposition += 20    
+                else:
+                    yposition = groundheight
+                    
+                goingup = False    
+            elif yposition > groundheight - jumpheight and goingup:
+                yposition -= 20
+
+        elif movement[pygame.K_LEFT] and movement[pygame.K_UP]:
+            
+            direction = "Left"
+            if not backgroundlock and not leftlock:
+                backx += 15
+                back1x += 15
+                back2x += 15
+            else:
+                xposition -= 15
+            if yposition <> groundheight:
+                imagenumber = -2
+            else:
+                if leftlock:
+                    if xposition <= 15:
+                        dialoguebox("Apparently I can't go that way", "Small", [xposition + 10, yposition])
+                        xposition = xposition
+                    else:
+                        xposition -= 15
+                if imagenumber < lastimage - 2:
+                    imagenumber += 1
+                else:
+                    imagenumber = 1
+##                else:
+##                    xposition -= 15
+
+
+            if yposition <= groundheight - jumpheight or goingup == False:
+                if yposition < groundheight - 10:
+                    yposition += 20
+                else:
+                    yposition = groundheight
+                goingup = False    
+            elif yposition > groundheight - jumpheight and goingup:
+                yposition -= 20
+
+                
+        
+        elif movement[pygame.K_RIGHT]:
+            direction = "Right"
+
+            if not backgroundlock:
+                
+                backx -= 15
+                back1x -= 15
+                back2x -= 15
+            else:
+                xposition += 15
+            if yposition <> groundheight:
+                yposition = groundheight
+            if imagenumber < lastimage - 2:
+                imagenumber += 1
+            else:
+                imagenumber = 1
+            goingup = True
+
+        elif movement[pygame.K_LEFT]:
+
+            direction = "Left"
+            if not backgroundlock and not leftlock:
+                backx += 15
+                back1x += 15
+                back2x += 15
+            else:
+                if leftlock:
+                    if xposition <= 15:
+                        dialoguebox("Apparently I can't go that way", "Small", [xposition + 10, yposition])
+                        xposition = xposition
+                    else:
+                        xposition -= 15
+                else:
+                    xposition -= 15
+            if yposition <> groundheight:
+                yposition = groundheight
+                
+            if imagenumber < lastimage - 2:
+                imagenumber += 1
+            else:
+                imagenumber = 1
+            goingup = True
+            
+        elif movement[pygame.K_DOWN]:
+            yposition = groundheight + 40
+            imagenumber = -1
+            
+                
+
+        elif movement[pygame.K_UP]:                
+            if yposition <> groundheight:
+                imagenumber = -2
+            else:
+                imagenumber = 0
+            if yposition <= groundheight - jumpheight or goingup == False:                    
+                if yposition < groundheight - 10:
+                    yposition += 20     
+                else:
+                    yposition = groundheight
+                goingup = False
+            elif yposition > groundheight - jumpheight and goingup:
+                yposition -= 20
+        else:
+            imagenumber = 0
+            yposition = groundheight
+            goingup = True
+
+        if direction.lower() == "right":
+            imagelist = walklistright
+        else:
+            imagelist = walklistleft
+
+        if backx + display_width <= 0:
+            backx, back1x, back2x = back1x, back2x, back2x + display_width
+        if back2x - display_width >= display_width:
+            back2x, back1x, backx = back1x, backx, backx - display_width
+
+        
+        if dinoonscreen:
+            dinox -= 30
+            if dinoimagenumber < len(dinoimagelist[whichdino]) - 1:
+                dinoimagenumber += 1
+            else:
+                dinoimagenumber = 0
+            dinoimage = dinoimagelist[whichdino][dinoimagenumber]
+
+##        print dinox, dinox < -90
+
+        if dinox < -90:
+            dinoonscreen = False
+            
+
+        
+        
+        background([snowbackground, snowbackground, snowbackground], [backx, back1x, back2x], [backy, back1y, back2y])
+
+        gameDisplay.blit(imagelist[imagenumber], [xposition, yposition])
+        if dinoonscreen:          
+            gameDisplay.blit(dinoimage, [dinox, dinoy])
+        pygame.display.update()
+        gameDisplay.fill(white)
+
+            
+            
+        
 
 def firstgameloop():
     # ALL VARIABLES INITIALIZED HERE:
@@ -1307,7 +1680,7 @@ def firstgameloop():
 
 
 
-gameintro()
+brickbreakerintro()
 
 
 
