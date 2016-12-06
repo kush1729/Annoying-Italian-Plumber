@@ -8,7 +8,7 @@ This way it is easier to figure out what shit does.
 All levels in a class
 Each level class object must have a function gameLoop(), in which the game loop runs if you haven't guessed already.
 All other methods/attributes can be level specific.'''
-from dialoguebox import *
+#from dialoguebox import *
 import pygame
 import time
 import random
@@ -92,8 +92,7 @@ charredstand = pygame.image.load("charredstand.png")
 
 charredlistleft = [charredstand, charredleft1, charredleft2, charredleft3]
 
-
-
+audi = pygame.image.load('audi.jpg')
 
 # Background images:
 hitlerbackgroundimage = pygame.image.load("hitlerbackground.png")
@@ -129,7 +128,7 @@ flame = pygame.image.load("flames.png")
 
 #MUSIC!
 pygame.mixer.music.load('AIP theme.wav')
-pygame.mixer.music.play(loops = -1)
+pygame.mixer.music.play(-1)
 
 #IMPORTANT CONSTANTS FOR AND DESIGN OF GAME DISPLAY------------------------------------------
 display_width, display_height = 1000, 750
@@ -182,8 +181,6 @@ def message_to_screen(msg, color, center_loc, size):
     textRect.center = center_loc
     gameDisplay.blit(textSurf, textRect)
     return textRect
-
-
 
 def fabulous(xposition, yposition, colourlist = [yellow, gold, goldenrod]):
     explode = True
@@ -250,7 +247,6 @@ def dialoguebox(text, size, (xposition, yposition), timegap = 0.05, colour = bla
             EOL = 18
         writing(text, colour, (yposition - 90, xposition), size = textsize, timegap = timegap, EOL = EOL)
 
-
 def writing(text, colour, (ht, requiredwidth), size = "smallmed", timegap = 0.1,  EOL = None):
     numberofspaces = ""
     font_dict = {'small':15, 'medium':35, 'large':80, 'smallmed':30, 'mediumlarge':60}
@@ -295,10 +291,6 @@ def writing(text, colour, (ht, requiredwidth), size = "smallmed", timegap = 0.1,
 ##                elif count % EOL == 3:
             time.sleep(timegap)
 
-
-
-
-
 #---------------------------------------------------------------------------------------------
 
 #DIFFERENT MENU SCREENS: ---------------------------------------------------------------------
@@ -318,15 +310,12 @@ def pause_screen():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     quit_function()
-                    
-                
                 if event.key == pygame.K_p:
                     pygame.mixer.music.unpause()
-                    return
+                    return False 
                 if event.key == pygame.K_c:
                     return True
                 
-#def dialoguebox(text, size, (xposition, yposition), timegap = 0.05, colour = black, textsize = None, EOL = None, imagechange = None):
 def quit_function():
     pygame.mixer.music.stop()
     gameDisplay.fill(white)
@@ -511,9 +500,11 @@ def firstintro(stage = 1):
 
         walk(initmariox, display_width/2, floorheight, walklistleft, direction = "Left", backgroundimagelist = [genericbackground], backgroundx = [backx], backgroundy = [backy])
         pygame.display.update()
+        print 'stage3done'
         return
     
     elif stage == 4:
+        print 'stage4start'
         background([cave, walklistright[0], notebackground], [backx, initmariox, notex], [backy, floorheight, notey])
         dialoguebox("That cave looks too creepy, let's go the other way", "Medium", [initmariox, floorheight])
         pygame.display.update()
@@ -563,10 +554,8 @@ def firstintro(stage = 1):
         dialoguebox("AAAAAARRRRGGGGH!", "Medium", [display_width - 120, floorheight])
         pygame.display.update()
         time.sleep(0.5)
-        vortex()
-        iceage()
+        return 'done'
    
-
 def hitlerrun():
     # Changeables:
     floorheight = display_height/2 + 100
@@ -833,8 +822,6 @@ def launchgame():
     
     shipGameLoop()
 
-
-
 def iceage(stage = 1):
     # Changeables:
     backx, backy = 0, 0
@@ -1060,7 +1047,6 @@ def iceage(stage = 1):
         hypotenuse = 20
         slope = abs((display_height - (flamey + 150))//(display_width - (mariox + 300)))
         angle = degrees(atan(slope))
-        print angle
         theimage = pygame.transform.rotate(flame, 90 - angle)
         
         while flamex >= mariox or flamey <= 0:
@@ -1094,9 +1080,6 @@ def iceage(stage = 1):
                 marioheight = -100
 
         background([snowbackground], [backx], [backy])
-        vortex()
-        
-        launchgame()
 
 class BrickBreaker:
     GAMEOVER = False
@@ -1201,6 +1184,7 @@ class BrickBreaker:
     numRows, numCols = 5, 7
 
     def __init__(level):
+        level.GAMEOVER = False
         level.count = 0
         level.numEmails = 0
         level.totalarraywidth = level.bricksize[0]*level.numCols
@@ -1218,10 +1202,6 @@ class BrickBreaker:
                 level.blocks[j][i] = level.Block((x, y), flag)
         level.paddle = level.Paddle()
         level.ball = level.Projectile((display_width//2, level.paddle.y))
-
-    def exitlevel(level):
-        NPSK()
-        quit_function()
 
     def gameLoop(level):
         cheat = False
@@ -1246,9 +1226,11 @@ class BrickBreaker:
                                 level.ball.velocity[1] = - int(float(level.ball.maxVelocity) * sin(radians(45.0)))
             if cheat:
                 level.GAMEOVER = True
-                level.exitlevel()
             level.ball.move(level.paddle)
-            level.GAMEOVER = level.ball.collision('walls')
+            flagLose = level.ball.collision('walls')
+            if flagLose:
+                level.__init__()
+                level.gameLoop()
             level.ball.collision('paddle', level.paddle)
             loc = level.ball.collision('blocks', level.blocks)
             if loc != None:
@@ -1270,8 +1252,7 @@ class BrickBreaker:
             level.paddle.draw()
             level.ball.draw()
             pygame.display.update()
-        else:
-            level.exitlevel()
+      
 
 def brickbreakerintro():
     # Changeables:
@@ -1486,21 +1467,11 @@ def brickbreakerintro():
     pygame.display.update()
     gameDisplay.fill(white)
     time.sleep(0.5)
-
-## BRICKBREAKER GAME COMES HERE!!!
-    game = BrickBreaker()
-    game.gameLoop()
     
-
-
-    
-    
-
 # ----------------Animations done done done--------------------------
                 
 # CHARACTER FUNCTIONS:
 def walk(initx, finx, yposition, imagelist, direction, changewidth = 10, fps = 15, backgroundimagelist = None, backgroundx = None, backgroundy = None):
-
 
     imagenumber = 0
     while initx < finx and direction.lower() == "right":
@@ -1515,7 +1486,6 @@ def walk(initx, finx, yposition, imagelist, direction, changewidth = 10, fps = 1
             imagenumber = 1
         background(backgroundimagelist, backgroundx, backgroundy)
         gameDisplay.blit(imagelist[imagenumber], [initx, yposition])
-        
         
         pygame.display.update()
         gameDisplay.fill(white)
@@ -1547,10 +1517,6 @@ def background(imagelist, xposition, yposition):
     for i in range(len(imagelist)):
         gameDisplay.blit(imagelist[i], [xposition[i], yposition[i]])
         
-
-
-    
-    
 
 
 # ACTUAL GAME:
@@ -1586,7 +1552,8 @@ def gameintro():
 
 
         if intro:
-            firstgameloop()         
+            firstgameloop()
+            return
             intro = False
 
 def lives(numberoflives, xposition, yposition):
@@ -1597,9 +1564,7 @@ def lives(numberoflives, xposition, yposition):
         gameDisplay.blit(heart, [initialwidth, yposition])
     pygame.display.update()
     return
-        
-
-
+    
 def iceagegameloop():
     gameon = True
     groundheight = display_height/2 + 100
@@ -1650,7 +1615,6 @@ def iceagegameloop():
                     cheat = pause_screen()
         if cheat:
             gameon = False
-            launchgame()
 
         movement = pygame.key.get_pressed()
         
@@ -1894,11 +1858,8 @@ def iceagegameloop():
             pygame.display.update()
             
             iceage(2)
-
-            
-            
-        
-
+            return
+  
 def firstgameloop():
     # ALL VARIABLES INITIALIZED HERE:
     gameon = True
@@ -1937,7 +1898,6 @@ def firstgameloop():
 
         if cheat:
             gameon = False
-            iceagegameintro()
         
         # UP AND RIGHT:
         if movement[pygame.K_RIGHT] and movement[pygame.K_UP]:
@@ -2054,13 +2014,7 @@ def firstgameloop():
                 imagenumber += 1
             else:
                 imagenumber = 1
-            
-
                 
-            
-           
-            
-
         elif movement[pygame.K_UP]:
             if stageonedone and not stage2done:
                 stage2done = True
@@ -2095,8 +2049,6 @@ def firstgameloop():
             if stage3done:
                 countcave += 1
                 
-
-            
         if back2x - display_width >= display_width:
             back2x, backx, back1x = backx, back1x, back1x - display_width
 ##            stageonedone = True
@@ -2114,11 +2066,16 @@ def firstgameloop():
         if backgroundlock and xposition > display_width - 310:
             pass
         else:
-            if backgroundlock and xposition >= display_width/2 and not stage4done:
-                firstintro(4)
+            if backgroundlock and xposition >= display_width/2 - 50 and not stage4done:
+                print 'lol what'
+                stringstuff = firstintro(4)
                 stage4done = True
+                if stringstuff == 'done':
+                    return
             if stage4done:
                 background([cave], [0], [0])
+                gameon = False
+                return
             else:
                 gameDisplay.blit(imagelist[imagenumber], [xposition, yposition])
 
@@ -2150,7 +2107,7 @@ def firstgameloop():
             countcave = 0
             background([genericbackground, walklistright[0]], [0, display_width/2 + 3], [0, groundheight])
 
-
+    
 time_increment = 0.4
 
 ocean = pygame.image.load('sea.png')
@@ -2343,8 +2300,7 @@ def shipGameLoop():
                     enemy.hp -= damage
                     if enemy.hp <= 0:
                         enemy.sunk = True
-                        vortex()
-                        brickbreakerintro()
+                        return 
                     projectile[0] = None
                 elif damage != False and i == 1:
                     aip.loc[0] -= projectile[1].velocity[0]/MAXPOWER
@@ -2361,28 +2317,41 @@ def shipGameLoop():
         
 def NPSK():
     mariox = display_width/2
-    audi = genericbackground
     background([audi], [0], [0])
     marioheight = -100
-    while marioheight < display_height/2:
-        clock.tick(50)
-        theimage = pygame.transform.rotate(duck, marioheight)
-        background([audi, walklistright], [0, mariox], [0, marioheight])
-
-        pygame.display.update()
-
-        gameDisplay.fill(white)
-        if marioheight + 30 <= display_height/2:
-            marioheight += 30
-        else:
-            marioheight = display_height/2
-    background([audi, walklistright[0]], [0, mariox], [0, marioheight])
+    walk(0, display_width//2, display_height//2 + 100, walklistright, 'Right', backgroundimagelist = [audi],
+         backgroundx = [0], backgroundy = [0]) 
+##    while marioheight < display_height/2:
+##        for event in pygame.event.get():
+##            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+##                quit_function()
+##        clock.tick(50)
+##        theimage = pygame.transform.rotate(duck, marioheight)
+##        background([audi, walklistright[0]], [0, mariox], [0, marioheight])
+##
+##        pygame.display.update()
+##
+##        gameDisplay.fill(white)
+##        if marioheight + 30 <= display_height/2:
+##            marioheight += 30
+##        else:
+##            marioheight = display_height/2
+##    background([audi, walklistright[0]], [0, mariox], [0, marioheight])
     pygame.display.update()
-    dialoguebox("That's all folks!", "Medium", [mariox, marioheight])
+    dialoguebox("That's all folks!", "Medium", [display_width//2, display_height//2 + 100])
+    time.sleep(0.6)
+    pygame.quit()
+    quit()
 
+#put list of functions for different levels here
 gameintro()
-####
-####
-####
-####
-##NPSK()
+vortex()
+iceage()
+vortex()
+launchgame()
+vortex()
+brickbreakerintro()
+game = BrickBreaker()
+game.gameLoop()
+vortex()
+NPSK()
