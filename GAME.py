@@ -308,13 +308,13 @@ def writing(text, colour, (ht, requiredwidth), size = "smallmed", timegap = 0.1,
 #DIFFERENT MENU SCREENS: ---------------------------------------------------------------------
 def pause_screen():
     pygame.mixer.music.pause()
+    text = []
     while True:
         gameDisplay.fill(white)
         message_to_screen('GONE FOR', red, (display_width//2, display_height//5), display_height//5)
         message_to_screen('TOILET BREAK', red, (display_width//2, 2.5*display_height//5), display_height//5 - 20)
         message_to_screen('PRESS P TO CONTINUE', black, (display_width//2, 4*display_height//5), display_height//20)
         pygame.display.update()
-        text = ''
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 quit_function()
@@ -325,8 +325,12 @@ def pause_screen():
                 if event.key == pygame.K_p:
                     pygame.mixer.music.unpause()
                     return False 
-                if event.key == pygame.K_c:
-                    return True
+                if event.key in (pygame.K_c, pygame.K_h, pygame.K_e, pygame.K_a, pygame.K_t):
+                    text.append(event.key)
+                else:
+                    text = []
+        if text == [pygame.K_c, pygame.K_h, pygame.K_e, pygame.K_a, pygame.K_t]:
+            return True
                 
 def quit_function():
     pygame.mixer.music.stop()
@@ -344,7 +348,9 @@ def vortex(xwidth = 1500, yheight = 1500):
     
     for i in range(90):
         clock.tick(90)
-        
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                quit_function()
         theimage = pygame.transform.rotate(vorteximage, 2*i)
         imagexwidth, imageyheight = theimage.get_size()
         imagex = display_width//2 - imagexwidth//2
@@ -1547,6 +1553,7 @@ def gameintro():
         btny = display_height//2
         for i in range(UNLOCKEDLEVEL):
             level = button("LEVEL " + str(i+1), btnx, btny, btnwidth, btnheight, green, darkgreen, action = (i+1))
+            if level != None: break
             btnx += (btngap + btnwidth)
             if btnx > display_width - btnwidth:
                 btnx = 2*btngap
@@ -2274,16 +2281,22 @@ def drawAll(self = None):
 
 def shipGameLoop():
     global aip, projectile
+    cheat = False
     while True:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     quit()
+                elif event.key == pygame.K_p:
+                    cheat = pause_screen()
+                    if cheat:
+                        return
                 elif event.key == pygame.K_SPACE:
                     if projectile[0] == None:
                         projectile[0] = Projectile(aip)
-                    enemy.shoot()
+                        if projectile[1] == None:
+                            enemy.shoot()
         keystate = pygame.key.get_pressed()
         aip.power += keystate[pygame.K_RIGHT] - keystate[pygame.K_LEFT]
         if aip.power >= MAXPOWER: aip.power = MAXPOWER
@@ -2348,6 +2361,7 @@ def NPSK():
 #This simplifies code. We also don't need to hunt for relevent function when adding new levels.
 
 CURRENTLEVEL = gameintro()
+print CURRENTLEVEL
 if CURRENTLEVEL == 1:
     firstgameloop()
     vortex()
