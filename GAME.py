@@ -2340,27 +2340,51 @@ def NPSK():
     mariox = display_width/2
     background([audi], [0], [0])
     marioheight = -100
-    walk(0, display_width//2, display_height//2 + 100, walklistright, 'Right', backgroundimagelist = [audi],
-         backgroundx = [0], backgroundy = [0]) 
-##    while marioheight < display_height/2:
-##        for event in pygame.event.get():
-##            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-##                quit_function()
-##        clock.tick(50)
-##        theimage = pygame.transform.rotate(duck, marioheight)
-##        background([audi, walklistright[0]], [0, mariox], [0, marioheight])
-##
-##        pygame.display.update()
-##
-##        gameDisplay.fill(white)
-##        if marioheight + 30 <= display_height/2:
-##            marioheight += 30
-##        else:
-##            marioheight = display_height/2
-##    background([audi, walklistright[0]], [0, mariox], [0, marioheight])
+    finalheight = display_height/2 + 100
+##    walk(0, display_width//2, display_height//2 + 100, walklistright, 'Right', backgroundimagelist = [audi],
+##         backgroundx = [0], backgroundy = [0]) 
+    while marioheight < finalheight:
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                quit_function()
+        clock.tick(30)
+        theimage = pygame.transform.rotate(duck, marioheight)
+        background([audi, theimage], [0, mariox], [0, marioheight])
+
+        pygame.display.update()
+
+        gameDisplay.fill(white)
+        if marioheight + 30 <= finalheight:
+            marioheight += 30
+        else:
+            marioheight = finalheight
+    theimage = pygame.transform.rotate(duck, 270)
+    background([audi, theimage], [0, mariox], [0, marioheight + 50])
     pygame.display.update()
-    dialoguebox("That's all folks!", "Medium", [display_width//2, display_height//2 + 100])
-    time.sleep(0.6)
+    time.sleep(0.8)
+    gameDisplay.fill(white)
+    background([audi, walklistright[0]], [0, mariox], [0, marioheight])
+    time.sleep(0.3)
+    dialoguebox("That's all NPS K!", "Medium", [mariox, marioheight])
+    time.sleep(2)
+    thefinalheight = -100
+    while marioheight > thefinalheight:
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                quit_function()
+        clock.tick(20)
+        theimage = pygame.transform.rotate(duck, marioheight)
+        background([audi, theimage], [0, mariox], [0, marioheight])
+        pygame.display.update()
+        gameDisplay.fill(white)
+        if marioheight - 30 >= thefinalheight:
+            marioheight -= 30
+        else:
+            marioheight = thefinalheight
+
+    background([audi], [0], [0])
+    pygame.display.update()
+    time.sleep(1)
     pygame.quit()
     quit()
 
