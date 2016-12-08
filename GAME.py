@@ -330,6 +330,9 @@ def pause_screen():
                 else:
                     text = []
         if text == [pygame.K_c, pygame.K_h, pygame.K_e, pygame.K_a, pygame.K_t]:
+            gameDisplay.fill(white)
+            pygame.mixer.music.unpause()
+            writing('WE\'RE PROUD OF YOU!', black, (display_width//2 - 250, 100), 150, 0.1, 6) 
             return True
                 
 def quit_function():
@@ -518,11 +521,9 @@ def firstintro(stage = 1):
 
         walk(initmariox, display_width/2, floorheight, walklistleft, direction = "Left", backgroundimagelist = [genericbackground], backgroundx = [backx], backgroundy = [backy])
         pygame.display.update()
-        print 'stage3done'
         return
     
     elif stage == 4:
-        print 'stage4start'
         background([cave, walklistright[0], notebackground], [backx, initmariox, notex], [backy, floorheight, notey])
         dialoguebox("That cave looks too creepy, let's go the other way", "Medium", [initmariox, floorheight])
         pygame.display.update()
@@ -2074,7 +2075,6 @@ def firstgameloop():
             pass
         else:
             if backgroundlock and xposition >= display_width/2 - 50 and not stage4done:
-                print 'lol what'
                 stringstuff = firstintro(4)
                 stage4done = True
                 if stringstuff == 'done':
@@ -2361,7 +2361,6 @@ def NPSK():
 #This simplifies code. We also don't need to hunt for relevent function when adding new levels.
 
 CURRENTLEVEL = gameintro()
-print CURRENTLEVEL
 if CURRENTLEVEL == 1:
     firstgameloop()
     vortex()
