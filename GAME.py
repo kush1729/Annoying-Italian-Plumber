@@ -1141,8 +1141,15 @@ class BrickBreaker:
             self.radius = self.image_size[0]//2
 
         def draw(self):
-            #pygame.draw.circle(gameDisplay, self.colour, self.centre, self.radius)
+            #make sure velocity does not go beyond the maxVelocity.
+            factor = self.get_velocity()/float(self.maxVelocity)
+            if factor > 1:
+                self.velocity[0] = int(round(float(self.velocity[0])/factor))
+                self.velocity[1] = int(round(float(self.velocity[1])/factor))
             gameDisplay.blit(self.image, (self.centre[0] - self.radius, self.centre[1] - self.radius))
+
+        def get_velocity(self):
+            return ((self.velocity[0])**2 + (self.velocity[1])**2)**0.5
 
         def get_rect(self):
             rectx, recty = self.centre[0] - self.radius, self.centre[1] - self.radius
@@ -1187,7 +1194,7 @@ class BrickBreaker:
     class Paddle:
         width = 20
         length = 100
-        speed = 10
+        speed = 14
         colour = green
         movement = 0
         
@@ -1245,6 +1252,7 @@ class BrickBreaker:
                                 level.ball.velocity[1] = - int(float(level.ball.maxVelocity) * sin(radians(45.0)))
             if cheat:
                 level.GAMEOVER = True
+                gamelevelselect(skip = True)
             level.ball.move(level.paddle)
             flagLose = level.ball.collision('walls')
             if flagLose:
@@ -1256,7 +1264,7 @@ class BrickBreaker:
                 level.blocks[loc[0]][loc[1]].broken = True
                 if level.blocks[loc[0]][loc[1]].special: level.count += 1
             if level.count == level.numEmails:
-                level.exitlevel()
+                gamelevelselect(skip = True)
             keystate = pygame.key.get_pressed()
             level.paddle.movement = - level.paddle.speed * (keystate[pygame.K_LEFT] - keystate[pygame.K_RIGHT])
             if (level.paddle.speed <= level.paddle.x + level.paddle.movement <= display_width - level.paddle.speed - level.paddle.length):
@@ -1544,8 +1552,7 @@ def gameintro():
     while level == None: #level not chosen yet
         message_to_screen("Adjust the Screen and then click Start", red, (display_width/2, 100), size = "medium")
         for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                     quit_function()
         #Stuff for placing the level buttons
         btngap = 15
@@ -1622,7 +1629,7 @@ def iceagegameloop():
                 if event.key == pygame.K_p:
                     cheat = pause_screen()
         if cheat:
-            gameon = False
+            gamelevelselect(skip = True)
 
         movement = pygame.key.get_pressed()
         
@@ -1858,9 +1865,7 @@ def iceagegameloop():
             heartcheck = True
             
         if numberoflives <= 0:
-            print "LOL U DED"
-            quit_function()
-               
+            iceagegameloop()
         if backgroundlock:
             walk(xposition, display_width + 30, yposition, walklistright, "Right", backgroundimagelist = [snowbackground, snowbackground, snowbackground], backgroundx = [backx, back1x, back2x], backgroundy = [backy, back1y, back2y])            
             pygame.display.update()
@@ -1894,8 +1899,6 @@ def firstgameloop():
         clock.tick(fps)
         movement = pygame.key.get_pressed()
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                quit_function()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     quit_function()
@@ -2189,6 +2192,7 @@ class AIP_Boat:
 
     def draw(self):
         #blit pic of mario, currently using ugly square (same thing)
+        if self.loc[0] < 5: self.loc[0] = 5
         self.gunBase = [self.loc[0] + self.image_size[0]//2, self.loc[1] + self.image_size[1]//2]
         self.mario_loc = [self.loc[0] + self.mario_size[0]//2 + 15, self.loc[1] - self.mario_size[1]//2 + 15]
         self.gunTip[0] = int(self.gunBase[0] + self.gunLength * cos(radians(self.theta)))
@@ -2225,6 +2229,8 @@ class EnemyShip:
 
     def draw(self):
         if self.sunk: return
+        if self.loc[0] + self.image_size[0] > display_width - 5:
+            self.loc[0] = display_width - self.image_size[0] - 5
         self.gunBase = [self.loc[0] + 50, self.loc[1] + 4*self.image_size[1]//5 + 10]
         self.gunTip[0] = int(self.gunBase[0] - self.gunLength * cos(radians(self.theta)))
         self.gunTip[1] = int(self.gunBase[1] - self.gunLength * sin(radians(self.theta)))
@@ -2263,9 +2269,11 @@ class EnemyShip:
         self.power = vel_tot
         projectile[1] = Projectile(self)
 
-aip = AIP_Boat()
-enemy = EnemyShip()
-projectile = [None, None]  #[aip's projectile, enemy projectile]
+def initstuff():
+    global aip, enemy, projectile
+    aip = AIP_Boat()
+    enemy = EnemyShip()
+    projectile = [None, None]  #[aip's projectile, enemy projectile]
 
 def drawAll(self = None):
     gameDisplay.fill(white)
@@ -2281,17 +2289,17 @@ def drawAll(self = None):
 
 def shipGameLoop():
     global aip, projectile
+    initstuff()
     cheat = False
     while True:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    quit()
+                    quit_function()
                 elif event.key == pygame.K_p:
                     cheat = pause_screen()
                     if cheat:
-                        return
+                        gamelevelselect(skip = True)
                 elif event.key == pygame.K_SPACE:
                     if projectile[0] == None:
                         projectile[0] = Projectile(aip)
@@ -2313,7 +2321,7 @@ def shipGameLoop():
                     enemy.hp -= damage
                     if enemy.hp <= 0:
                         enemy.sunk = True
-                        return 
+                        gamelevelselect(skip = True) 
                     projectile[0] = None
                 elif damage != False and i == 1:
                     aip.loc[0] -= projectile[1].velocity[0]/MAXPOWER
@@ -2359,22 +2367,28 @@ def NPSK():
 
 #put list of functions for different levels here
 #This simplifies code. We also don't need to hunt for relevent function when adding new levels.
-
+    
 CURRENTLEVEL = gameintro()
-if CURRENTLEVEL == 1:
-    firstgameloop()
+
+def gamelevelselect(skip = False):
+    global CURRENTLEVEL
+    if skip == True: CURRENTLEVEL += 1
+    if CURRENTLEVEL == 1:
+        firstgameloop()
+        vortex()
+        iceage()
+        CURRENTLEVEL += 1
+    if CURRENTLEVEL == 2:
+        vortex()
+        launchgame()
+        CURRENTLEVEL += 1
+    if CURRENTLEVEL == 3:
+        vortex()
+        brickbreakerintro()
+        game = BrickBreaker()
+        game.gameLoop()
+        CURRENTLEVEL += 1
     vortex()
-    iceage()
-    CURRENTLEVEL += 1
-if CURRENTLEVEL == 2:
-    vortex()
-    launchgame()
-    CURRENTLEVEL += 1
-if CURRENTLEVEL == 3:
-    vortex()
-    brickbreakerintro()
-    game = BrickBreaker()
-    game.gameLoop()
-    CURRENTLEVEL += 1
-vortex()
-NPSK()
+    NPSK()
+
+gamelevelselect()
