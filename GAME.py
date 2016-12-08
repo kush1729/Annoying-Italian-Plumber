@@ -135,6 +135,17 @@ display_width, display_height = 1000, 750
 gameDisplay = pygame.display.set_mode((display_width, display_height), pygame.FULLSCREEN)
 gameDisplay.fill(white)
 clock = pygame.time.Clock()
+MAXLEVELS = 3
+'''The levels are (not counting pure animation levels):
+1. Ice Age - Dino Run
+2. Sir Francis Drake - Ship Game
+3. Trump - Brick Breaker'''
+CURRENTLEVEL = 3 #Keeps track of the current level no.
+
+settingsfile = open('GAME settings.txt')
+for line in settingsfile:
+    UNLOCKEDLEVEL = int(line.rstrip()) #Keeps track of the unlocked level. This is the only thing saved on the text file.
+settingsfile.close()
 #--------------------------------------------------------------------------------------------
 
 #TEXT AND BUTTON STUFF:  --------------------------------------------------------------------
@@ -148,19 +159,20 @@ largefont = pygame.font.SysFont("comicsansms", 80)
 
 
 def button(text, x, y, width, height, inactiveColour, activeColour, action = None):
+    levelno = action
     #x, y is the coordinates of the top left corner of the button
-    global lvl_no
     cur = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
     if x + width > cur[0] > x and y + height > cur[1] > y:
-        if click[0] == 1 and action != None:
-            #stuff the button has to do. action is a string which tells what function to run
-            if action.lower() == "ready":
-                return True
+        if click[0] == 1 and levelno != None:
+            #stuff the button has to do. level is the level no of button which was clicked. It tells which function to run
+            if levelno in range(1, MAXLEVELS + 1):
+                return levelno
         pygame.draw.rect(gameDisplay, activeColour, (x, y, width, height))
     else:
         pygame.draw.rect(gameDisplay, inactiveColour, (x, y, width, height))
     text_to_button(text, black, x, y, width, height)
+    return None
     
 def text_objects(text, colour, size):
     font_dict = {'small':smallfont, 'medium':medfont, 'large':largefont, 'smallmed':smallmedfont, 'mediumlarge':mediumlargefont}
@@ -1521,40 +1533,28 @@ def background(imagelist, xposition, yposition):
 
 # ACTUAL GAME:
 def gameintro():
-    intro = True
-    Ready = False
-    while True:
-        
-        gameDisplay.fill(white)
-
-        
-        while not Ready:
-            message_to_screen("Adjust the Screen and then click Start", red, (display_width/2, 100), size = "medium")
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    quit_function()
-                    
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_p:
-                        pause_screen()
-                    
-            Ready = button("Start", display_width/2 - 50, display_height/2 - 50, 100, 100, green, darkgreen, action = "Ready")
-
-            pygame.display.update()
-            gameDisplay.fill(white)
-            
+    level = None
+    while level == None: #level not chosen yet
+        message_to_screen("Adjust the Screen and then click Start", red, (display_width/2, 100), size = "medium")
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                quit_function
             if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_p:
-                        pause_screen()
-
-
-        if intro:
-            firstgameloop()
-            return
-            intro = False
+                if event.key == pygame.K_ESCAPE:
+                    quit_function()
+        #Stuff for placing the level buttons
+        btngap = 15
+        btnwidth, btnheight = 100, 100
+        btnx = 2*btngap
+        btny = display_height//2
+        for i in range(UNLOCKEDLEVEL):
+            level = button("LEVEL " + str(i+1), btnx, btny, btnwidth, btnheight, green, darkgreen, action = (i+1))
+            btnx += (btngap + btnwidth)
+            if btnx > display_width - btnwidth:
+                btnx = 2*btngap
+                btny += (btnheight + btngap)
+        pygame.display.update()
+        gameDisplay.fill(white)
+    else:
+        return level
 
 def lives(numberoflives, xposition, yposition):
     initialwidth = xposition
@@ -2343,15 +2343,25 @@ def NPSK():
     pygame.quit()
     quit()
 
+
 #put list of functions for different levels here
-gameintro()
-vortex()
-iceage()
-vortex()
-launchgame()
-vortex()
-brickbreakerintro()
-game = BrickBreaker()
-game.gameLoop()
+#This simplifies code. We also don't need to hunt for relevent function when adding new levels.
+
+CURRENTLEVEL = gameintro()
+if CURRENTLEVEL == 1:
+    firstgameloop()
+    vortex()
+    iceage()
+    CURRENTLEVEL += 1
+if CURRENTLEVEL == 2:
+    vortex()
+    launchgame()
+    CURRENTLEVEL += 1
+if CURRENTLEVEL == 3:
+    vortex()
+    brickbreakerintro()
+    game = BrickBreaker()
+    game.gameLoop()
+    CURRENTLEVEL += 1
 vortex()
 NPSK()
