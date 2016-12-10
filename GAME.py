@@ -174,14 +174,15 @@ def button(text, x, y, width, height, inactiveColour, activeColour, action = Non
     text_to_button(text, black, x, y, width, height)
     return None
     
-def text_objects(text, colour, size):
+def text_objects(text, colour, size, numreturn = 2):
     font_dict = {'small':smallfont, 'medium':medfont, 'large':largefont, 'smallmed':smallmedfont, 'mediumlarge':mediumlargefont}
     #size is font size as an integer
     try:
         textSurface = font_dict[size].render(text, True, colour)
     except:
         textSurface = pygame.font.SysFont("comicsansms", size).render(text, True, colour)
-    return textSurface, textSurface.get_rect()
+    if numreturn == 2: return textSurface, textSurface.get_rect()
+    else: return textSurface.get_rect()
 
 def text_to_button(msg, color, btnx, btny, btnwidth, btnheight, size = "small"):
     textSurf , textRect = text_objects(msg, color, size)
@@ -260,48 +261,44 @@ def dialoguebox(text, size, (xposition, yposition), timegap = 0.05, colour = bla
         writing(text, colour, (yposition - 90, xposition), size = textsize, timegap = timegap, EOL = EOL)
 
 def writing(text, colour, (ht, requiredwidth), size = "smallmed", timegap = 0.1,  EOL = None):
-    numberofspaces = ""
+    if EOL == None: return
     font_dict = {'small':15, 'medium':35, 'large':80, 'smallmed':30, 'mediumlarge':60}
-    try:
-        textSurface = font_dict[size].render(text, True, colour)
-    except:
-        textSurface = pygame.font.SysFont("comicsansms", size).render(text, True, colour)
-    
-    count1 = count = 0
-    flag = False
+    sampletextobject = text_objects('W', black, size, numreturn = 1)
+    count = 0
     length = len(text)
-    
-    try: h = font_dict[size] + 5
-    except: h = size + 5
-
-    for letters in range(length):
-        if EOL <> None:
-            count1 += 1
-            if count1 % EOL == 0:
-                flag = True   
-            if flag == True:
-                if text[letters].isspace() == True:
-                    flag = False
-                elif count1 % EOL >= 3:
-                    theindex = letters
-                    text = text[:theindex] + "- " + text[theindex:]
-                    #count1 = EOL + 1
-                    flag = False
-    for letters in text:
-        if EOL <> None:         
-            message_to_screen(numberofspaces + letters, colour, (requiredwidth, ht), size)
+    textlist = list()
+    previndex = 0
+    punctuations = (',', '.', ':', '-', '!', '?', ';')
+    h, letterwidth = sampletextobject.size
+    h += 2
+    letterwidth //= 2
+    i = EOL-1
+    while i < length - 1:
+        while text[previndex].isspace():
+            previndex += 1
+            i += 1
+        if text[i].isspace() or (text[i] in punctuations) or text[i+1].isspace():
+            textlist.append(text[previndex:i+1])
+            previndex = i+1
+            i += EOL
+        else:
+            if text[i - 1].isspace():
+                textlist.append(text[previndex:i])
+                previndex = i
+                i += EOL - 1
+            else:
+                textlist.append(text[previndex:i] + '-')
+                previndex = i
+                i += EOL - 1
+    textlist.append(text[previndex:])
+    for group in textlist:
+        x = requiredwidth
+        for letter in group:
+            message_to_screen(letter, colour, (x, ht), size)
+            x += letterwidth
             pygame.display.update()
-            numberofspaces += "     "
-            count += 1
-            if count % EOL == 0:
-                flag = True
-            if flag == True:
-                if letters.isspace() == True:
-                    ht += h
-                    numberofspaces = ""
-                    flag = False
-##                elif count % EOL == 3:
             time.sleep(timegap)
+        ht += h
 
 #---------------------------------------------------------------------------------------------
 
@@ -1141,15 +1138,10 @@ class BrickBreaker:
             self.radius = self.image_size[0]//2
 
         def draw(self):
-            #make sure velocity does not go beyond the maxVelocity.
-            factor = self.get_velocity()/float(self.maxVelocity)
-            if factor > 1:
-                self.velocity[0] = int(round(float(self.velocity[0])/factor))
-                self.velocity[1] = int(round(float(self.velocity[1])/factor))
             gameDisplay.blit(self.image, (self.centre[0] - self.radius, self.centre[1] - self.radius))
 
         def get_velocity(self):
-            return ((self.velocity[0])**2 + (self.velocity[1])**2)**0.5
+            return hypot(float(self.velocity[0]), float(self.velocity[1]))
 
         def get_rect(self):
             rectx, recty = self.centre[0] - self.radius, self.centre[1] - self.radius
@@ -1160,17 +1152,22 @@ class BrickBreaker:
         def collision(self, obj = 'walls', theobject = None):
             if not self.moving: return
             if obj == 'walls':
-                if self.centre[0] - self.radius <= 0 or self.centre[0] + self.radius >= display_width: self.velocity[0] = - self.velocity[0]
-                elif self.centre[1] - self.radius <= 0: self.velocity[1] = - self.velocity[1]
-                elif self.centre [1] >= display_height: return True
-                else: return False
+                if self.centre[0] - self.radius <= 0 or self.centre[0] + self.radius >= display_width:
+                    self.velocity[0] = - self.velocity[0]
+                elif self.centre[1] - self.radius <= 0:
+                    self.velocity[1] = - self.velocity[1]
+                elif self.centre [1] >= display_height:
+                    return True
+                else:
+                    return False
             elif obj == 'paddle':
                 if self.get_rect().colliderect(theobject.get_rect()):
                     distance = min(abs(self.centre[0] - theobject.x), abs(self.centre[0] - theobject.x - theobject.length))
-                    self.velocity[1] = - max(abs(self.velocity[1] - (self.velocity[1] * distance / (theobject.length/2))), abs((self.velocity[1] * distance / (theobject.length/2))))
+                    vel1 = abs(self.velocity[1] - (self.velocity[1] * distance / (theobject.length/2)))
+                    vel2 = abs((self.velocity[1] * distance / (theobject.length/2)))
+                    self.velocity[1] = - max(vel1, vel2)
                     if abs(self.velocity[1]) <= 5: self.velocity[1] = - int(float(self.maxVelocity) * sin(radians(45.0)))
-                    sign = -1 if self.velocity[0] < 0 else 1
-                    self.velocity[0] = sign * int(((self.maxVelocity**2) - (self.velocity[1]**2))**0.5)
+                    self.velocity[0] = cmp(self.velocity[0], 0) * int(((self.maxVelocity**2) - (self.velocity[1]**2))**0.5)
             elif obj == 'blocks':
                 for i in range(len(theobject)):
                     for j in range(len(theobject[0])):
@@ -1188,6 +1185,13 @@ class BrickBreaker:
                 self.centre[0] = paddle.x + paddle.length//2
                 self.centre[1] = paddle.y - self.radius
                 return
+            #make sure velocity does not go beyond the maxVelocity.
+            if self.get_velocity() > self.maxVelocity:
+                theta = atan(float(self.velocity[1])/float(self.velocity[0]))
+                self.velocity[0] = int(float(self.maxVelocity) * cos(theta))
+                self.velocity[1] = int(float(self.maxVelocity) * sin(theta))
+                print self.velocity, self.get_velocity()
+                
             self.centre[0] += self.velocity[0]
             self.centre[1] += self.velocity[1]
 
@@ -1305,7 +1309,6 @@ def brickbreakerintro():
     time.sleep(0.5)
     gameDisplay.fill(white)
     
-    
     while marioheight < display_height:
         clock.tick(50)
         theimage = pygame.transform.rotate(duck, marioheight)
@@ -1325,9 +1328,6 @@ def brickbreakerintro():
 
     time.sleep(1)
 
-
-
-    
     while marioheight > display_height - mariosize[1] - 40:
         clock.tick(20)
         theimage = walklistleft[len(walklistleft) - 2]
@@ -1351,13 +1351,11 @@ def brickbreakerintro():
         else:
             marioheight = display_height - mariosize[1]
 
-    
     background([trumpbackground, trump1, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
     pygame.display.update()
     dialoguebox("It's a me a Ma-", "Medium", [mariox, marioheight])
     pygame.display.update()
     gameDisplay.fill(white)
-    
     
     background([trumpbackground, trump1, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
     dialoguebox("What is that caterpillar on your face?!", "Medium", [trumpdialoguex, trumpdialoguey])
@@ -1365,29 +1363,27 @@ def brickbreakerintro():
     gameDisplay.fill(white)
     time.sleep(0.5)
     
-
     background([trumpbackground, trump1, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
     dialoguebox("What died on your head?", "Medium", [mariox, marioheight])
     pygame.display.update()
     gameDisplay.fill(white)
     time.sleep(0.5)
-
+    
     background([trumpbackground, trumpfingerraise, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
     dialoguebox("I have the best hair...", "Medium", [trumpdialoguex, trumpdialoguey])
     pygame.display.update()
     gameDisplay.fill(white)
     time.sleep(0.5)
 
-
     background([trumpbackground, trumpfingerraise, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
     dialoguebox("My supporters LOVE me", "Medium", [trumpdialoguex, trumpdialoguey])
     pygame.display.update()
     gameDisplay.fill(white)
     time.sleep(0.5)
-
+    
     background([trumpbackground, trumpleft, podiumimage, walklistleft[0]], [backx, trumpx, podiumx, mariox], [backy, trumpy, podiumy, marioheight])
     theimage = pygame.transform.rotate(dialoguedict["Large"], 270)
-    dialoguebox("BOO ! YOU STINK! And your hair looks like something died in there!", "Medium", [150, display_height/2], EOL = 6, imagechange = theimage)
+    dialoguebox("BOO! YOU STINK! And your hair looks like something died in there!", "Medium", [150, display_height/2], EOL = 8, imagechange = theimage)
     pygame.display.update()
     time.sleep(0.5)
 
@@ -2117,7 +2113,7 @@ def firstgameloop():
             countcave = 0
             background([genericbackground, walklistright[0]], [0, display_width/2 + 3], [0, groundheight])
 
-    
+  
 time_increment = 0.4
 
 ocean = pygame.image.load('sea.png')
